@@ -58,7 +58,6 @@ def get_tax_at_threshold(threshold, slab_income, stcg, ltcg, crypto_income, regi
         reduced_crypto -= drop
         excess -= drop
         
-    # Apply Unexhausted BEL logic at the threshold level as well
     unexhausted_bel = max(0, basic_exemption - reduced_slab)
     taxable_stcg = reduced_stcg
     taxable_ltcg = max(0, reduced_ltcg - ltcg_exemption)
@@ -91,14 +90,12 @@ def calculate_surcharge_and_relief(total_taxable_income, slab_income, stcg, ltcg
         return 0, 0
         
     surcharge_rate_cg = min(surcharge_rate, 0.15)
-    
     other_income = slab_income + crypto_income
     surcharge_rate_other = surcharge_rate
     
     if total_taxable_income > 20000000 and other_income <= 20000000:
         surcharge_rate_other = min(surcharge_rate, 0.15)
     
-    # Needs to match the base tax cg ratio accurately
     unexhausted_bel = max(0, basic_exemption - slab_income)
     taxable_stcg = stcg
     taxable_ltcg = max(0, ltcg - ltcg_exemption)
@@ -119,7 +116,6 @@ def calculate_surcharge_and_relief(total_taxable_income, slab_income, stcg, ltcg
     actual_tax_cg = base_tax - tax_other
     
     surcharge = (tax_other * surcharge_rate_other) + (actual_tax_cg * surcharge_rate_cg)
-    
     tax_at_threshold = get_tax_at_threshold(threshold, slab_income, stcg, ltcg, crypto_income, regime_slabs, stcg_rate, ltcg_rate, ltcg_exemption, basic_exemption)
         
     threshold_surcharge_rate = 0
@@ -138,7 +134,6 @@ def calculate_surcharge_and_relief(total_taxable_income, slab_income, stcg, ltcg
     tax_threshold_other = tax_at_threshold - tax_threshold_cg
             
     surcharge_at_threshold = (tax_threshold_other * threshold_surcharge_rate_other) + (tax_threshold_cg * threshold_surcharge_rate_cg)
-    
     max_tax_allowed = tax_at_threshold + surcharge_at_threshold + (total_taxable_income - threshold)
     current_total_tax = base_tax + surcharge
     
@@ -148,7 +143,6 @@ def calculate_surcharge_and_relief(total_taxable_income, slab_income, stcg, ltcg
         
     return surcharge - marginal_relief, marginal_relief
 
-# ---------------- NEW REGIME ---------------- #
 def calculate_new_regime(salary, business, rental, interest, dividend, foreign, other, stcg, ltcg, crypto_income, home_loan_interest, year_data):
     effective_crypto = max(0, crypto_income) 
     
@@ -166,7 +160,6 @@ def calculate_new_regime(salary, business, rental, interest, dividend, foreign, 
     ltcg_exemption = year_data.get("ltcg_exemption", 125000)
     basic_exemption = year_data["new_regime_slabs"][0]["limit"]
 
-    # Audit Fix: Unexhausted Basic Exemption Limit (BEL) Set-off
     unexhausted_bel = max(0, basic_exemption - slab_income)
     taxable_stcg = stcg
     taxable_ltcg = max(0, ltcg - ltcg_exemption)
@@ -204,7 +197,6 @@ def calculate_new_regime(salary, business, rental, interest, dividend, foreign, 
     total_taxable_income = slab_income + stcg + ltcg + effective_crypto
     total_tax_before_rebate = slab_tax + special_tax
 
-    # Audit Fix: Section 87A rebate cannot be set off against Section 112A LTCG tax
     tax_eligible_for_rebate = slab_tax + stcg_tax + crypto_tax 
     
     rebate = 0
@@ -214,7 +206,6 @@ def calculate_new_regime(salary, business, rental, interest, dividend, foreign, 
         rebate = tax_eligible_for_rebate 
         tax_after_rebate = total_tax_before_rebate - rebate
     else:
-        # Audit Fix: Marginal Relief for Sec 87A
         excess_income = total_taxable_income - year_data["new_rebate_limit"]
         max_allowed_tax_on_eligible = excess_income
         if tax_eligible_for_rebate > max_allowed_tax_on_eligible:
@@ -240,7 +231,6 @@ def calculate_new_regime(salary, business, rental, interest, dividend, foreign, 
         "cess": cess, "final_tax": final_tax, "breakdown": breakdown
     }
 
-# ---------------- OLD REGIME ---------------- #
 def calculate_old_regime(salary, business, rental, interest, dividend, foreign, other, stcg, ltcg, crypto_income, 
                          deduction_80c, deduction_80d, nps_80ccd1b, deduction_80e, deduction_80g_100, deduction_80g_50, other_deductions, 
                          home_loan_interest, basic_salary, hra_received, rent_paid, is_metro, professional_tax, lta_exemption, sec10_allowances,
@@ -302,7 +292,6 @@ def calculate_old_regime(salary, business, rental, interest, dividend, foreign, 
     slabs = year_data["old_regime_slabs"][age_group]
     basic_exemption = slabs[0]["limit"]
 
-    # Audit Fix: Unexhausted Basic Exemption Limit (BEL) Set-off
     unexhausted_bel = max(0, basic_exemption - slab_income)
     taxable_stcg = stcg
     taxable_ltcg = max(0, ltcg - ltcg_exemption)
@@ -497,7 +486,7 @@ def generate_tax_pdf(income, income_breakdown, year, comparison, new_data, old_d
 # ---------------- ROUTES ---------------- #
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request, "tax_data": all_tax_data})
+    return templates.TemplateResponse(request=request, name="index.html", context={"tax_data": all_tax_data})
 
 @app.post("/calculate", response_class=HTMLResponse)
 def calculate(
@@ -525,7 +514,7 @@ def calculate(
     }
 
     if total_gross_income <= 0:
-        return templates.TemplateResponse("index.html", {"request": request, "error": "Total income must be > 0.", "tax_data": all_tax_data})
+        return templates.TemplateResponse(request=request, name="index.html", context={"error": "Total income must be > 0.", "tax_data": all_tax_data})
 
     comparison = []
     lowest_tax = float("inf")
@@ -710,8 +699,8 @@ def calculate(
     old_effective_rate = (old_data["final_tax"] / total_gross_income) * 100 if total_gross_income > 0 else 0
     surcharge_warning = "High income surcharge applied. Note: Maximum surcharge for Capital Gains (STCG/LTCG) is actively capped at 15%." if new_data["net_surcharge"] > 0 or old_data["net_surcharge"] > 0 else None
 
-    return templates.TemplateResponse("result.html", {
-        "request": request, "comparison": comparison, "best_year": best_year,
+    return templates.TemplateResponse(request=request, name="result.html", context={
+        "comparison": comparison, "best_year": best_year,
         "years": years_list, "new_taxes": new_taxes_list, "old_taxes": old_taxes_list, 
         "income": total_gross_income, "income_breakdown": income_breakdown,
         "year": year, "age_group": age_group, 
