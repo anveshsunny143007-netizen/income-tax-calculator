@@ -1,0 +1,146 @@
+{
+  "2025-26": {
+    "_note": "New regime surcharge is capped at 25% (0.25) above 2Cr. The 37% slab is intentionally omitted here.",
+    "standard_deduction": 75000,
+    "old_standard_deduction": 50000,
+    "new_rebate_limit": 1200000,
+    "old_rebate_limit": 500000,
+    "stcg_rate": 0.20,
+    "ltcg_rate": 0.125,
+    "ltcg_exemption": 125000,
+    "new_regime_slabs": [
+      {"limit": 400000, "rate": 0},
+      {"limit": 800000, "rate": 0.05},
+      {"limit": 1200000, "rate": 0.10},
+      {"limit": 1600000, "rate": 0.15},
+      {"limit": 2000000, "rate": 0.20},
+      {"limit": 2400000, "rate": 0.25},
+      {"limit": 999999999, "rate": 0.30}
+    ],
+    "old_regime_slabs": {
+      "below60": [
+        {"limit": 250000, "rate": 0},
+        {"limit": 500000, "rate": 0.05},
+        {"limit": 1000000, "rate": 0.20},
+        {"limit": 999999999, "rate": 0.30}
+      ],
+      "senior": [
+        {"limit": 300000, "rate": 0},
+        {"limit": 500000, "rate": 0.05},
+        {"limit": 1000000, "rate": 0.20},
+        {"limit": 999999999, "rate": 0.30}
+      ],
+      "super_senior": [
+        {"limit": 500000, "rate": 0},
+        {"limit": 1000000, "rate": 0.20},
+        {"limit": 999999999, "rate": 0.30}
+      ]
+    },
+    "new_surcharge_slabs": [
+      {"limit": 5000000, "rate": 0.10},
+      {"limit": 10000000, "rate": 0.15},
+      {"limit": 20000000, "rate": 0.25}
+    ],
+    "old_surcharge_slabs": [
+      {"limit": 5000000, "rate": 0.10},
+      {"limit": 10000000, "rate": 0.15},
+      {"limit": 20000000, "rate": 0.25},
+      {"limit": 50000000, "rate": 0.37}
+    ]
+  },
+  "2024-25": {
+    "standard_deduction": 75000,
+    "old_standard_deduction": 50000,
+    "new_rebate_limit": 700000,
+    "old_rebate_limit": 500000,
+    "stcg_rate": 0.20,
+    "ltcg_rate": 0.10,
+    "ltcg_exemption": 100000,
+    "new_regime_slabs": [
+      {"limit": 300000, "rate": 0},
+      {"limit": 600000, "rate": 0.05},
+      {"limit": 900000, "rate": 0.10},
+      {"limit": 1200000, "rate": 0.15},
+      {"limit": 1500000, "rate": 0.20},
+      {"limit": 999999999, "rate": 0.30}
+    ],
+    "old_regime_slabs": {
+      "below60": [
+        {"limit": 250000, "rate": 0},
+        {"limit": 500000, "rate": 0.05},
+        {"limit": 1000000, "rate": 0.20},
+        {"limit": 999999999, "rate": 0.30}
+      ],
+      "senior": [
+        {"limit": 300000, "rate": 0},
+        {"limit": 500000, "rate": 0.05},
+        {"limit": 1000000, "rate": 0.20},
+        {"limit": 999999999, "rate": 0.30}
+      ],
+      "super_senior": [
+        {"limit": 500000, "rate": 0},
+        {"limit": 1000000, "rate": 0.20},
+        {"limit": 999999999, "rate": 0.30}
+      ]
+    },
+    "new_surcharge_slabs": [
+      {"limit": 5000000, "rate": 0.10},
+      {"limit": 10000000, "rate": 0.15},
+      {"limit": 20000000, "rate": 0.25}
+    ],
+    "old_surcharge_slabs": [
+      {"limit": 5000000, "rate": 0.10},
+      {"limit": 10000000, "rate": 0.15},
+      {"limit": 20000000, "rate": 0.25},
+      {"limit": 50000000, "rate": 0.37}
+    ]
+  },
+  "2023-24": {
+    "standard_deduction": 50000,
+    "old_standard_deduction": 50000,
+    "new_rebate_limit": 700000,
+    "old_rebate_limit": 500000,
+    "stcg_rate": 0.15,
+    "ltcg_rate": 0.10,
+    "ltcg_exemption": 100000,
+    "new_regime_slabs": [
+      {"limit": 250000, "rate": 0},
+      {"limit": 500000, "rate": 0.05},
+      {"limit": 750000, "rate": 0.10},
+      {"limit": 1000000, "rate": 0.15},
+      {"limit": 1250000, "rate": 0.20},
+      {"limit": 1500000, "rate": 0.25},
+      {"limit": 999999999, "rate": 0.30}
+    ],
+    "old_regime_slabs": {
+      "below60": [
+        {"limit": 250000, "rate": 0},
+        {"limit": 500000, "rate": 0.05},
+        {"limit": 1000000, "rate": 0.20},
+        {"limit": 999999999, "rate": 0.30}
+      ],
+      "senior": [
+        {"limit": 300000, "rate": 0},
+        {"limit": 500000, "rate": 0.05},
+        {"limit": 1000000, "rate": 0.20},
+        {"limit": 999999999, "rate": 0.30}
+      ],
+      "super_senior": [
+        {"limit": 500000, "rate": 0},
+        {"limit": 1000000, "rate": 0.20},
+        {"limit": 999999999, "rate": 0.30}
+      ]
+    },
+    "new_surcharge_slabs": [
+      {"limit": 5000000, "rate": 0.10},
+      {"limit": 10000000, "rate": 0.15},
+      {"limit": 20000000, "rate": 0.25}
+    ],
+    "old_surcharge_slabs": [
+      {"limit": 5000000, "rate": 0.10},
+      {"limit": 10000000, "rate": 0.15},
+      {"limit": 20000000, "rate": 0.25},
+      {"limit": 50000000, "rate": 0.37}
+    ]
+  }
+}
