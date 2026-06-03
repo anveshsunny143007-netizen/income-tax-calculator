@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Analytics Dashboard</title>
+    <style>
+        :root {
+            --primary: #0a2540;
+            --accent: #635bff;
+            --success: #00d4b2;
+            --success-bg: #e6f9f6;
+            --danger: #ff5c75;
+            --danger-bg: #fff0f2;
+            --warning: #f5a623;
+            --warning-bg: #fff8ec;
+            --gray-light: #f8f9fa;
+            --gray-border: #eef2f5;
+            --text-main: #2d3142;
+            --text-muted: #697386;
+        }
+
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            background-color: #f7f9fc; 
+            margin: 0; 
+            padding: 0; 
+            color: var(--text-main);
+            line-height: 1.5;
+        }
+
+        .dashboard-container { 
+            max-width: 1200px; 
+            margin: 40px auto; 
+            padding: 0 20px;
+        }
+
+        /* Card Layouts */
+        .dash-card { 
+            background: white; 
+            border-radius: 12px; 
+            border: 1px solid var(--gray-border);
+            box-shadow: 0 4px 6px rgba(50,50,93,0.02), 0 1px 3px rgba(0,0,0,0.02);
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--gray-border);
+            background: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        /* Hero Split Panel */
+        .hero-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: var(--primary);
+            color: white;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .hero-side {
+            padding: 32px;
+        }
+
+        .hero-divider {
+            border-left: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Typography & Badges */
+        .text-big { font-size: 28px; font-weight: 700; margin: 8px 0; }
+        .text-muted { color: var(--text-muted); font-size: 14px; }
+        
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .badge-success { background: var(--success-bg); color: #008771; }
+        .badge-danger { background: var(--danger-bg); color: #c3273e; }
+        .badge-warning { background: var(--warning-bg); color: #b07000; }
+
+        .income-pill { 
+            background: var(--gray-light); 
+            padding: 6px 14px; 
+            border-radius: 8px; 
+            font-size: 13px; 
+            margin-right: 8px; 
+            display: inline-block; 
+            margin-bottom: 8px; 
+            color: var(--primary); 
+            border: 1px solid var(--gray-border);
+            font-weight: 500;
+        }
+
+        /* Interactive Tables */
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            text-align: left;
+        }
+        
+        th { 
+            padding: 14px 16px; 
+            font-size: 13px; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            color: var(--text-muted);
+            border-bottom: 2px solid var(--gray-border);
+            font-weight: 600;
+        }
+        
+        td { 
+            padding: 14px 16px; 
+            font-size: 14px; 
+            border-bottom: 1px solid var(--gray-border);
+        }
+
+        tr:hover td { background-color: var(--gray-light); }
+
+        .slab-table { margin-top: 15px; }
+        .slab-table th { background: var(--gray-light); padding: 8px 12px; font-size: 11px; }
+        .slab-table td { padding: 8px 12px; font-size: 13px; }
+
+        /* Grid Layouts */
+        .grid-2 { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(48%, 1fr)); 
+            gap: 24px; 
+        }
+
+        /* Strategic Advisory Components */
+        .roadmap-list { list-style: none; padding: 0; margin: 0; }
+        .roadmap-item { 
+            background: var(--gray-light); 
+            padding: 16px; 
+            border-radius: 8px; 
+            margin-bottom: 12px; 
+            display: flex; 
+            align-items: center;
+            border: 1px solid var(--gray-border);
+            font-weight: 500;
+        }
+        .roadmap-item::before { content: '🎯'; margin-right: 12px; font-size: 18px; }
+
+        /* Optimization Slider Styling */
+        .slider-group { margin-bottom: 20px; }
+        .slider-label-row { display: flex; justify-content: space-between; font-weight: 600; font-size: 14px; }
+        input[type=range] { 
+            width: 100%; 
+            height: 6px; 
+            background: var(--gray-border); 
+            border-radius: 5px; 
+            outline: none; 
+            margin: 12px 0;
+            -webkit-appearance: none;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+        }
+
+        /* Action Buttons */
+        .btn-secondary { display: inline-block; padding: 10px 24px; background: white; border: 1px solid var(--gray-border); text-decoration: none; color: var(--text-main); border-radius: 6px; font-weight: 500; transition: 0.2s; }
+        .btn-secondary:hover { background: var(--gray-light); border-color: #cbd5e1; }
+        .btn-primary { background: var(--accent); color: white; padding: 12px 24px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-primary:hover { background: #544dc9; }
+
+        .relief-badge { display: inline-block; background: #e0f2fe; color: #0369a1; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; margin-top: 5px; }
+
+        @media (max-width: 900px) { 
+            .hero-panel { grid-template-columns: 1fr; } 
+            .hero-divider { border-left: none; border-top: 1px solid rgba(255,255,255,0.1); }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="dashboard-container">
+    
+    <!-- Hero Header Component -->
+    <div class="hero-panel">
+        <div class="hero-side">
+            <span class="text-muted" style="color: rgba(255,255,255,0.7)">COMPREHENSIVE ANALYSIS</span>
+            <div class="text-big">FY {{ year }} Taxation Summary</div>
+            <div style="margin-top: 15px;">
+                {% for source, amount in income_breakdown.items() %}
+                    {% if amount > 0 %} <span class="income-pill" style="background: rgba(255,255,255,0.1); color: white; border: none;">{{ source }}: ₹{{ "{:,.0f}".format(amount) }}</span> {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        <div class="hero-side hero-divider" style="background: rgba(255,255,255,0.02);">
+            <span class="text-muted" style="color: rgba(255,255,255,0.7)">OPTIMAL ENGINE STRATEGY</span>
+            <div class="text-big" style="color: var(--success)">{{ better }} Recommended</div>
+            <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">
+                Choosing this path yields a direct legal saving of <strong>Sub-Total: ₹{{ "{:,.0f}".format(tax_difference) }}</strong> over the alternative structure.
+            </p>
+        </div>
+    </div>
+
+    {% if raw_crypto_input < 0 %}
+    <div class="dash-card" style="border-left: 4px solid var(--warning); background: var(--warning-bg);">
+        <div class="card-body" style="padding: 16px 24px;">
+            <strong>📋 Section 115BBH Protocol Notice:</strong> A Virtual Digital Asset loss of <strong>₹{{ "{:,.0f}".format(raw_crypto_input | abs) }}</strong> was documented. Indian tax guidelines strictly prohibit offsetting crypto losses against positive income categories or carrying them forward. This balance has been decoupled from your net global pools.
+        </div>
+    </div>
+    {% endif %}
+
+    {% if surcharge_warning %}
+    <div class="dash-card" style="border-left: 4px solid var(--warning); background: var(--warning-bg);">
+        <div class="card-body" style="padding: 16px 24px;">
+            <strong>⚠️ Surcharge Escalation:</strong> {{ surcharge_warning }}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Global Timeline Chart Component -->
+    <div class="dash-card">
+        <div class="card-header">
+            <h3>📈 Multi-Year Regime Trajectory</h3>
+        </div>
+        <div class="card-body">
+            <canvas id="taxTrendChart" height="80"></canvas>
+        </div>
+    </div>
+
+    <!-- Comparative Table Panel -->
+    <div class="dash-card">
+        <div class="card-header">
+            <h3>📅 Cross-Regime Timeline Matrix</h3>
+        </div>
+        <div class="card-body" style="padding: 0;">
+            <table>
+                <thead>
+                    <tr><th>Financial Year</th><th>New Regime Tax</th><th>Old Regime Tax</th><th>Optimal Pathway</th></tr>
+                </thead>
+                <tbody>
+                    {% for row in comparison %}
+                    <tr {% if row.year == year %} style="background: var(--gray-light); font-weight: 600;" {% endif %}>
+                        <td>FY {{ row.year }} {% if row.year == year %}(Selected Framework){% endif %}</td>
+                        <td style="color: #0052cc;">₹{{ "{:,.0f}".format(row.new_tax) }}</td>
+                        <td style="color: #495057;">₹{{ "{:,.0f}".format(row.old_tax) }}</td>
+                        <td>
+                            <span class="badge {% if row.better == 'New Regime' %}badge-success{% else %}badge-danger{% endif %}">
+                                {{ row.better }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Deep-Dive Breakdown Split View -->
+    <div class="grid-2">
+        
+        <!-- New Regime Profile -->
+        <div class="dash-card" style="border-top: 4px solid var(--accent);">
+            <div class="card-header">
+                <h3>New Regime Assessment</h3>
+                <span class="badge badge-success">Simplified Code</span>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">Standard Salary Deduction: <span style="color: var(--danger)">-₹{{ "{:,.0f}".format(new_data.standard_deduction) }}</span></p>
+                {% if new_data.taxable_rental < income_breakdown['Rental'] %}
+                <p class="text-muted">Rental Net Provisioning (Sec 24a): <span style="color: var(--danger)">-₹{{ "{:,.0f}".format(income_breakdown['Rental'] - new_data.taxable_rental) }}</span></p>
+                {% endif %}
+                <p style="font-size: 16px; font-weight: 600; margin: 20px 0 10px 0;">Calculated Base Slab Income: ₹{{ "{:,.0f}".format(new_data.slab_income) }}</p>
+                
+                <table class="slab-table">
+                    <thead>
+                        <tr><th>Bracket</th><th>Rate</th><th>Tax Allocation</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for slab in new_data.breakdown %}
+                        <tr><td>{{ slab.range }}</td><td>{{ slab.rate }}</td><td>Extra: ₹{{ "{:,.0f}".format(slab.tax) }}</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                
+                {% if new_data.stcg_tax > 0 or new_data.ltcg_tax > 0 or new_data.crypto_tax > 0 %}
+                <div style="margin-top: 15px; background: var(--gray-light); padding: 12px; border-radius: 6px;">
+                    <span style="font-size: 11px; font-weight:600; text-transform:uppercase; color: var(--text-muted);">Special Base Rates</span>
+                    {% if new_data.stcg_tax > 0 %}<p style="margin:4px 0; font-size:13px;">Short-Term Gains (Sec 111A): <strong>Core: ₹{{ "{:,.0f}".format(new_data.stcg_tax) }}</strong></p>{% endif %}
+                    {% if new_data.ltcg_tax > 0 %}<p style="margin:4px 0; font-size:13px;">Long-Term Gains (Sec 112A): <strong>Core: ₹{{ "{:,.0f}".format(new_data.ltcg_tax) }}</strong></p>{% endif %}
+                    {% if new_data.crypto_tax > 0 %}<p style="margin:4px 0; font-size:13px;">Virtual Assets (Sec 115BBH): <strong>Core: ₹{{ "{:,.0f}".format(new_data.crypto_tax) }}</strong></p>{% endif %}
+                </div>
+                {% endif %}
+
+                <hr style="border: none; border-top: 1px solid var(--gray-border); margin: 20px 0;">
+                
+                <div style="display: flex; justify-content: space-between; font-size:14px; margin-bottom: 6px;">
+                    <span>Gross Standard Pool:</span><span>₹{{ "{:,.0f}".format(new_data.tax_before_rebate) }}</span>
+                </div>
+                
+                {% if new_data.rebate > 0 or new_data.marginal_relief_87a > 0 %}
+                    <div style="display: flex; justify-content: space-between; font-size:14px; color: #008771; margin-bottom: 6px;">
+                        <span>Section 87A Mitigation Allocation:</span><span>-₹{{ "{:,.0f}".format(new_data.rebate) }}</span>
+                    </div>
+                    {% if new_data.marginal_relief_87a > 0 %}
+                        <div><span class="relief-badge">87A Marginal Boundary Limit Engaged</span></div>
+                    {% endif %}
+                </div >
+                {% endif %}
+
+                {% if new_data.net_surcharge > 0 %}
+                    <div style="display: flex; justify-content: space-between; font-size:14px; margin-bottom: 6px;">
+                        <span>Surcharge Realized:</span><span>₹{{ "{:,.0f}".format(new_data.net_surcharge) }}</span>
+                    </div>
+                    {% if new_data.marginal_relief_surcharge > 0 %}
+                        <div><span class="relief-badge" style="background:#fef2f2; color:#b91c1c;">HNI Surcharge Marginal Relief Safe-Harbor Applied</span></div>
+                    {% endif %}
+                {% endif %}
+
+                <div style="display: flex; justify-content: space-between; font-size:14px; margin-bottom: 12px;">
+                    <span>Health & Education Cess (4%):</span><span>₹{{ "{:,.0f}".format(new_data.cess) }}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size:18px; font-weight:700; border-top: 2px dashed var(--gray-border); padding-top:12px;">
+                    <span>Net Valuation:</span><span style="color: var(--accent)">₹{{ "{:,.0f}".format(new_data.final_tax) }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Old Regime Profile -->
+        <div class="dash-card" style="border-top: 4px solid var(--text-muted);">
+            <div class="card-header">
+                <h3>Old Regime Assessment</h3>
+                <span class="badge badge-warning">Exemption Intensive</span>
+            </div>
+            <div class="card-body">
+                <div style="max-height: 125px; overflow-y: auto; font-size:13px; margin-bottom: 10px;">
+                    {% if old_data.hra_exemption > 0 %}<p style="margin:4px 0;">House Rent Mitigation (Sec 10): <span style="color: var(--danger)">-₹{{ "{:,.0f}".format(old_data.hra_exemption) }}</span></p>{% endif %}
+                    {% if old_data.lta_exemption > 0 %}<p style="margin:4px 0;">Travel Exemption (Sec 10): <span style="color: var(--danger)">-₹{{ "{:,.0f}".format(old_data.lta_exemption) }}</span></p>{% endif %}
+                    {% if old_data.professional_tax > 0 %}<p style="margin:4px 0;">Employment Tax (Sec 16): <span style="color: var(--danger)">-₹{{ "{:,.0f}".format(old_data.professional_tax) }}</span></p>{% endif %}
+                    <p style="margin:4px 0;">Standard Structural Claim (Sec 16): <span style="color: var(--danger)">-₹{{ "{:,.0f}".format(old_data.standard_deduction) }}</span></p>
+                    {% if old_data.home_loan_loss_setoff < 0 %}
+                    <p style="margin:4px 0;">Loss Settlement (Sec 24b): <span style="color: var(--danger)">-₹{{ "{:,.0f}".format(old_data.home_loan_loss_setoff | abs) }}</span></p>
+                    {% endif %}
+                    {% if old_data['80tta_ttb_deduction'] > 0 %}<p style="margin:4px 0;">Savings Interest Offset (Sec 80TTA/TTB): <span style="color: var(--danger)">-₹{{ "{:,.0f}".format(old_data['80tta_ttb_deduction']) }}</span></p>{% endif %}
+                </div>
+
+                <p class="text-muted">Total Active Chapter VI-A Claims: <span style="color: var(--danger)">-₹{{ "{:,.0f}".format(old_data.total_deductions) }}</span></p>
+                <p style="font-size: 16px; font-weight: 600; margin: 15px 0 10px 0;">Calculated Base Slab Income: ₹{{ "{:,.0f}".format(old_data.slab_income) }}</p>
+                
+                <table class="slab-table">
+                    <thead>
+                        <tr><th>Bracket</th><th>Rate</th><th>Tax Allocation</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for slab in old_data.breakdown %}
+                        <tr><td>{{ slab.range }}</td><td>{{ slab.rate }}</td><td>Extra: ₹{{ "{:,.0f}".format(slab.tax) }}</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <hr style="border: none; border-top: 1px solid var(--gray-border); margin: 20px 0;">
+                
+                <div style="display: flex; justify-content: space-between; font-size:14px; margin-bottom: 6px;">
+                    <span>Gross Standard Pool:</span><span>₹{{ "{:,.0f}".format(old_data.tax_before_rebate) }}</span>
+                </div>
+                
+                {% if old_data.rebate > 0 %}
+                    <div style="display: flex; justify-content: space-between; font-size:14px; color: #008771; margin-bottom: 6px;">
+                        <span>Section 87A Mitigation Allocation:</span><span>-₹{{ "{:,.0f}".format(old_data.rebate) }}</span>
+                    </div>
+                {% endif %}
+
+                {% if old_data.net_surcharge > 0 %}
+                    <div style="display: flex; justify-content: space-between; font-size:14px; margin-bottom: 6px;">
+                        <span>Surcharge Realized:</span><span>₹{{ "{:,.0f}".format(old_data.net_surcharge) }}</span>
+                    </div>
+                {% endif %}
+
+                <div style="display: flex; justify-content: space-between; font-size:14px; margin-bottom: 12px;">
+                    <span>Health & Education Cess (4%):</span><span>₹{{ "{:,.0f}".format(old_data.cess) }}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size:18px; font-weight:700; border-top: 2px dashed var(--gray-border); padding-top:12px;">
+                    <span>Net Valuation:</span><span style="color: var(--primary)">₹{{ "{:,.0f}".format(old_data.final_tax) }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Advanced Tax Planning Advisory Suites -->
+    <h2 style="font-size: 20px; font-weight:700; margin: 40px 0 20px 0; color: var(--primary);">🚀 Strategic Optimization Portfolio</h2>
+
+    {% if salary_optimization %}
+    <div class="dash-card" style="border-left: 6px solid #6f42c1;">
+        <div class="card-header">
+            <h3 style="color: #6f42c1;">💼 Corporate Restructuring Simulator (Flexible Benefit Plan)</h3>
+        </div>
+        <div class="card-body">
+            <p style="margin-top:0;">Your present structural architecture leaves too much exposed. Re-allocating the allowances with your payroll team allows you to rescue an additional <strong>₹{{ "{:,.0f}".format(salary_optimization.savings) }}</strong> in net revenue annually without changing your top-line package.</p>
+            
+            <table>
+                <thead>
+                    <tr style="background: var(--gray-light);">
+                        <th>Compensation Element</th>
+                        <th>Baseline Profile</th>
+                        <th>Optimized Portfolio Target</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Basic Salary Component</td><td>₹{{ "{:,.0f}".format(salary_optimization.current_basic) }}</td><td style="color: #008771; font-weight:600;">₹{{ "{:,.0f}".format(salary_optimization.sim_basic) }}</td></tr>
+                    <tr><td>HRA Shielding (Sec 10)</td><td>₹{{ "{:,.0f}".format(salary_optimization.current_hra) }}</td><td style="color: #008771; font-weight:600;">₹{{ "{:,.0f}".format(salary_optimization.sim_hra) }}</td></tr>
+                    <tr><td>LTA Shielding (Sec 10)</td><td>₹{{ "{:,.0f}".format(salary_optimization.current_lta) }}</td><td style="color: #008771; font-weight:600;">₹{{ "{:,.0f}".format(salary_optimization.sim_lta) }}</td></tr>
+                    <tr><td>Tax-Free Catering Facility</td><td>₹0</td><td style="color: #008771; font-weight:600;">₹{{ "{:,.0f}".format(salary_optimization.sim_food) }}</td></tr>
+                    <tr><td>Digital & Communication Allowance</td><td>₹0</td><td style="color: #008771; font-weight:600;">₹{{ "{:,.0f}".format(salary_optimization.sim_telecom) }}</td></tr>
+                    <tr><td>Residual Balancing Allowance</td><td>₹{{ "{:,.0f}".format(salary_optimization.current_special) }}</td><td>₹{{ "{:,.0f}".format(salary_optimization.sim_special) }}</td></tr>
+                    <tr style="background: #f8fafc; font-weight: 700; font-size: 15px;">
+                        <td>Resulting Tax (Best Regime)</td>
+                        <td>₹{{ "{:,.0f}".format(current_best_tax) }}</td>
+                        <td style="color: #008771;">₹{{ "{:,.0f}".format(salary_optimization.new_tax) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if roadmap_allocation %}
+    <div class="dash-card" style="background: linear-gradient(135deg, #0f172a, #1e293b); color: white;">
+        <div class="card-body">
+            <h3 style="color: #f1f5f9; margin-top:0; font-size: 20px;">🗺️ Capital Deployment Map</h3>
+            <p style="opacity: 0.8;">To force an absolute minimization of the fiscal balance, prioritize deployment targets into these exact asset routes:</p>
+            <ul class="roadmap-list" style="margin-top: 20px;">
+                {% for step in roadmap_allocation %}
+                <li class="roadmap-item" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: white;">{{ step }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% elif is_break_even_possible %}
+    <div class="dash-card">
+        <div class="card-header">
+            <h3>⚖️ Mathematical Break-Even Threshold</h3>
+        </div>
+        <div class="card-body">
+            <p>Your unique point of indifference rests at <strong>Valuation: ₹{{ "{:,.0f}".format(break_even_total) }}</strong> in aggregate Chapter VI-A outlays.</p>
+            <p class="text-muted">Securing an additional ₹{{ "{:,.0f}".format(break_even_additional) }} in valid declarations will equalize the cost parameters of both tax models.</p>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if harvesting_advice %}
+    <div class="dash-card" style="border-left: 6px solid var(--warning); background: #fffcf5;">
+        <div class="card-header" style="background: transparent;">
+            <h3 style="color: #b07000;">📈 Capital Harvesting & Portfolio Protection</h3>
+        </div>
+        <div class="card-body">
+            <ul style="padding-left: 20px; margin: 0; color: #5c3e00;">
+                {% for tip in harvesting_advice %}
+                <li style="margin-bottom: 12px; font-weight: 500;">{{ tip }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- 5-Year Outlook Modeling -->
+    <div class="dash-card">
+        <div class="card-header">
+            <h3>🔮 5-Year Compounded Outlook Model</h3>
+            <span class="text-muted">Assumed Compound Growth: {{ growth_rate }}% YoY</span>
+        </div>
+        <div class="card-body" style="padding: 0;">
+            <table>
+                <thead>
+                    <tr><th>Projected Horizon</th><th>Gross Income Base</th><th>New Model Cost</th><th>Old Model Cost</th><th>Advantage Allocation</th><th>System Flags</th></tr>
+                </thead>
+                <tbody>
+                    {% for proj in future_projections %}
+                    <tr>
+                        <td><strong>{{ proj.year }}</strong></td>
+                        <td>₹{{ "{:,.0f}".format(proj.income) }}</td>
+                        <td style="color:#0052cc;">₹{{ "{:,.0f}".format(proj.new_tax) }}</td>
+                        <td>₹{{ "{:,.0f}".format(proj.old_tax) }}</td>
+                        <td style="font-weight: 600;">{{ proj.better }}</td>
+                        <td>{% if proj.note %}<span class="badge badge-danger">{{ proj.note }}</span>{% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Live Optimization Matrix Engine -->
+    <div class="dash-card">
+        <div class="card-header">
+            <h3>🎛️ Real-Time Cost Tuning Matrix (Old Regime)</h3>
+        </div>
+        <div class="card-body">
+            <div class="slider-group">
+                <div class="slider-label-row"><span>Section 80C Allocation</span><span style="color: var(--accent);">₹ <span id="val80c">0</span> / ₹1,50,000</span></div>
+                <input type="range" id="slider80c" min="0" max="150000" step="5000" value="{{ deduction_80c }}">
+            </div>
+            <div class="slider-group">
+                <div class="slider-label-row"><span>Section 80D Health Cover</span><span style="color: var(--accent);">₹ <span id="val80d">0</span> / ₹{{ "{:,.0f}".format(max_80d) }}</span></div>
+                <input type="range" id="slider80d" min="0" max="{{ max_80d }}" step="1000" value="{{ deduction_80d }}">
+            </div>
+            <div class="slider-group">
+                <div class="slider-label-row"><span>Section 80CCD(1B) Tier-1 NPS</span><span style="color: var(--accent);">₹ <span id="valNPS">0</span> / ₹50,000</span></div>
+                <input type="range" id="sliderNPS" min="0" max="50000" step="5000" value="{{ nps_80ccd1b }}">
+            </div>
+            <div class="slider-group">
+                <div class="slider-label-row"><span>Section 80E Educational Support</span><span style="color: var(--accent);">₹ <span id="val80e">0</span></span></div>
+                <input type="range" id="slider80e" min="0" max="500000" step="10000" value="{{ deduction_80e }}">
+            </div>
+            
+            <div style="background: var(--gray-light); padding: 20px; border-radius: 8px; border: 1px solid var(--gray-border); text-align: center; margin-top: 30px;">
+                <h4 style="margin: 0; font-size: 16px; color: var(--text-muted);">Dynamic Optimized Alternative Cost</h4>
+                <div style="font-size: 24px; font-weight: 700; color: var(--primary); margin: 8px 0;" id="optTax">₹ 0</div>
+                <p id="savingText" style="font-weight: 600; margin: 0; font-size: 14px;"><span id="optSaving">0</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Document Output Pipeline -->
+    <div class="grid-2" style="margin-top: 40px;">
+        <div>
+            <a href="/" class="btn-secondary" style="text-align: center; display: block; padding: 14px 0;">← Reconfigure Asset Metrics</a>
+        </div>
+        <div class="dash-card" style="margin-bottom: 0; padding: 24px; display: flex; flex-direction: column; justify-content: center; background: #fafafa;">
+            <form method="post" action="/download-pdf" style="margin: 0;">
+                <!-- Hidden attributes matching state -->
+                <input type="hidden" name="salary_income" value="{{ salary_income }}">
+                <input type="hidden" name="business_income" value="{{ business_income }}">
+                <input type="hidden" name="rental_income" value="{{ rental_income }}">
+                <input type="hidden" name="interest_income" value="{{ interest_income }}">
+                <input type="hidden" name="dividend_income" value="{{ dividend_income }}">
+                <input type="hidden" name="foreign_income" value="{{ foreign_income }}">
+                <input type="hidden" name="other_income_val" value="{{ other_income_val }}">
+                <input type="hidden" name="stcg_income" value="{{ stcg_income }}">
+                <input type="hidden" name="ltcg_income" value="{{ ltcg_income }}">
+                <input type="hidden" name="crypto_income" value="{{ crypto_income }}">
+                <input type="hidden" name="home_loan_interest" value="{{ home_loan_interest }}">
+                <input type="hidden" name="professional_tax" value="{{ professional_tax }}">
+                <input type="hidden" name="lta_exemption" value="{{ lta_exemption }}">
+                <input type="hidden" name="basic_salary" value="{{ basic_salary }}">
+                <input type="hidden" name="hra_received" value="{{ hra_received }}">
+                <input type="hidden" name="rent_paid" value="{{ rent_paid }}">
+                <input type="hidden" name="is_metro" value="{{ is_metro }}">
+                <input type="hidden" name="year" value="{{ year }}">
+                <input type="hidden" name="age_group" value="{{ age_group }}">
+                <input type="hidden" name="deduction_80c" value="{{ deduction_80c }}">
+                <input type="hidden" name="deduction_80d" value="{{ deduction_80d }}">
+                <input type="hidden" name="nps_80ccd1b" value="{{ nps_80ccd1b }}">
+                <input type="hidden" name="deduction_80e" value="{{ deduction_80e }}">
+                <input type="hidden" name="deduction_80g_100" value="{{ deduction_80g_100 }}">
+                <input type="hidden" name="deduction_80g_50" value="{{ deduction_80g_50 }}">
+                <input type="hidden" name="other_deductions" value="{{ other_deductions }}">
+                <input type="hidden" name="growth_rate" value="{{ growth_rate }}">
+
+                <div style="margin-bottom: 16px; font-size: 14px;">
+                    <label style="margin-bottom: 8px; display:block;"><input type="radio" name="report_type" value="clean" checked> Standard Brief Assessment (PDF)</label>
+                    <label style="display:block;"><input type="radio" name="report_type" value="detailed"> Advanced Structural Advisory Executive Portfolio (PDF)</label>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; padding: 14px 0;">Export Institutional Advisory PDF</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const ctx = document.getElementById('taxTrendChart').getContext('2d');
+    const labels = {{ years | safe }};
+    const newData = {{ new_taxes | safe }};
+    const oldData = {{ old_taxes | safe }};
+    
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'New Regime Profile',
+                    data: newData,
+                    borderColor: '#635bff',
+                    backgroundColor: 'rgba(99, 91, 255, 0.04)',
+                    borderWidth: 2.5,
+                    fill: true,
+                    tension: 0.15,
+                    pointRadius: 4
+                },
+                {
+                    label: 'Old Regime Profile',
+                    data: oldData,
+                    borderColor: '#a3aed0',
+                    backgroundColor: 'transparent',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    fill: false,
+                    tension: 0.15,
+                    pointRadius: 4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 12 } } } },
+            scales: {
+                y: {
+                    grid: { color: '#f1f5f9' },
+                    ticks: { callback: function(value) { return '₹' + value.toLocaleString('en-IN'); }, font: { size: 11 } }
+                },
+                x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+            }
+        }
+    });
+});
+
+const salary_income = {{ salary_income }};
+const business_income = {{ business_income }};
+const rental_income = {{ rental_income }};
+const interest_income = {{ interest_income }};
+const dividend_income = {{ dividend_income }};
+const foreign_income = {{ foreign_income }};
+const other_income_val = {{ other_income_val }};
+const stcg_income = {{ stcg_income }};
+const ltcg_income = {{ ltcg_income }};
+const crypto_income = {{ crypto_income }};
+const home_loan_interest = {{ home_loan_interest }};
+const professional_tax = {{ professional_tax }};
+const lta_exemption = {{ lta_exemption }};
+const basic_salary = {{ basic_salary }};
+const hra_received = {{ hra_received }};
+const rent_paid = {{ rent_paid }};
+const is_metro = "{{ is_metro }}";
+const year = "{{ year }}";
+const age_group = "{{ age_group }}";
+const deduction_80e = {{ deduction_80e }};
+const deduction_80g_100 = {{ deduction_80g_100 }};
+const deduction_80g_50 = {{ deduction_80g_50 }};
+const otherDeductions = {{ other_deductions }}; 
+const growth_rate = {{ growth_rate }};
+const maxEligibleChapVIA = {{ old_data.gross_slab_income }};
+const currentOldTax = {{ old_data.final_tax }};
+
+const slider80c = document.getElementById("slider80c");
+const slider80d = document.getElementById("slider80d");
+const sliderNPS = document.getElementById("sliderNPS");
+const slider80e = document.getElementById("slider80e");
+
+const val80c = document.getElementById("val80c");
+const val80d = document.getElementById("val80d");
+const valNPS = document.getElementById("valNPS");
+const val80e = document.getElementById("val80e");
+
+const optTax = document.getElementById("optTax");
+const savingText = document.getElementById("savingText");
+
+function updateOptimizer() {
+    val80c.innerText = Number(slider80c.value).toLocaleString('en-IN');
+    val80d.innerText = Number(slider80d.value).toLocaleString('en-IN');
+    valNPS.innerText = Number(sliderNPS.value).toLocaleString('en-IN');
+    val80e.innerText = Number(slider80e.value).toLocaleString('en-IN');
+
+    let totalRequestedDed = Number(slider80c.value) + Number(slider80d.value) + Number(sliderNPS.value) + Number(slider80e.value) + deduction_80g_100 + deduction_80g_50 + otherDeductions;
+
+    const formData = new FormData();
+    formData.append("salary_income", salary_income);
+    formData.append("business_income", business_income);
+    formData.append("rental_income", rental_income);
+    formData.append("interest_income", interest_income);
+    formData.append("dividend_income", dividend_income);
+    formData.append("foreign_income", foreign_income);
+    formData.append("other_income_val", other_income_val);
+    formData.append("stcg_income", stcg_income);
+    formData.append("ltcg_income", ltcg_income);
+    formData.append("crypto_income", crypto_income);
+    formData.append("home_loan_interest", home_loan_interest);
+    formData.append("professional_tax", professional_tax);
+    formData.append("lta_exemption", lta_exemption);
+    formData.append("basic_salary", basic_salary);
+    formData.append("hra_received", hra_received);
+    formData.append("rent_paid", rent_paid);
+    formData.append("is_metro", is_metro);
+    formData.append("year", year);
+    formData.append("age_group", age_group);
+    formData.append("deduction_80c", slider80c.value);
+    formData.append("deduction_80d", slider80d.value);
+    formData.append("nps_80ccd1b", sliderNPS.value);
+    formData.append("deduction_80e", slider80e.value);
+    formData.append("deduction_80g_100", deduction_80g_100); 
+    formData.append("deduction_80g_50", deduction_80g_50);
+    formData.append("other_deductions", otherDeductions); 
+    formData.append("growth_rate", growth_rate);
+
+    fetch("/optimize-tax", { method: "POST", body: formData })
+    .then(res => res.json())
+    .then(data => {
+        optTax.innerText = "₹ " + Math.round(data.optimized_tax).toLocaleString('en-IN');
+        let saving = currentOldTax - data.optimized_tax;
+        
+        let warningHTML = "";
+        if (totalRequestedDed > maxEligibleChapVIA) {
+            warningHTML = "<br><span style='color:#dc3545; font-size:12px; font-weight:normal;'>⚠️ Deductions exceed eligible gross regular pools. Maximum structural limits reached.</span>";
+        }
+
+        if (saving > 0) {
+            savingText.innerHTML = "Incremental Savings: ₹ " + Math.round(saving).toLocaleString('en-IN') + warningHTML;
+            savingText.style.color = "var(--success)";
+        } else if (saving < 0) {
+            savingText.innerHTML = "Net Liabilities Delta: +₹ " + Math.round(Math.abs(saving)).toLocaleString('en-IN') + warningHTML;
+            savingText.style.color = "var(--danger)";
+        } else {
+            savingText.innerHTML = "Valuation Variance: 0" + warningHTML;
+            savingText.style.color = "var(--text-muted)";
+        }
+    });
+}
+
+slider80c.addEventListener("input", updateOptimizer);
+slider80d.addEventListener("input", updateOptimizer);
+sliderNPS.addEventListener("input", updateOptimizer);
+slider80e.addEventListener("input", updateOptimizer);
+updateOptimizer();
+</script>
+</body>
+</html>

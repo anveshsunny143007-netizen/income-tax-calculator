@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Income Tax Calculator - Premium Fintech Edition</title>
+    <style>
+	body { font-family: 'Segoe UI', sans-serif; background: #f4f7fc; margin: 0; padding: 0; color: #2d3436; }
+	.hero { background: linear-gradient(135deg, #0d47a1, #1976d2); color: white; padding: 50px 20px; text-align: center; }
+	.container { max-width: 900px; margin: -30px auto 60px auto; padding: 30px; }
+	.card { background: white; padding: 25px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); margin-bottom: 30px; }
+	.form-grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 40px; row-gap: 20px; }
+	label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 5px; }
+	input, select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #dfe6e9; font-size: 14px; box-sizing: border-box; }
+	input:focus, select:focus { outline: none; border-color: #1976d2; box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1); }
+	.income-section { grid-column: span 2; background: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #e1e4e8; margin-bottom: 10px; position: relative; }
+	.income-section h4 { margin-top: 0; margin-bottom: 15px; color: #1976d2; font-size: 16px; border-bottom: 2px solid #eef2f7; padding-bottom: 10px; }
+	.live-total { text-align: right; margin-top: 15px; font-size: 18px; font-weight: bold; color: #28a745; }
+    .live-preview-box { margin-top: 15px; padding-top: 15px; border-top: 1px solid #e1e4e8; text-align: right; font-size: 15px; color: #444; }
+	.full-width { grid-column: span 2; text-align: center; margin-top: 10px; }
+	button { padding: 12px 35px; border-radius: 30px; border: none; font-size: 16px; font-weight: 600; background: #1976d2; color: white; cursor: pointer; transition: 0.3s; }
+	button:hover { background: #0d47a1; }
+    .btn-outline { background: transparent; border: 2px solid #1976d2; color: #1976d2; padding: 8px 15px; font-size: 13px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; width: 100%; margin-top: 10px; }
+    .btn-outline:hover { background: #f0f7ff; }
+	.table-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+	table { width: 100%; border-collapse: collapse; font-size: 13px; }
+	th { background: #f1f4f9; padding: 10px; text-align: center; }
+	td { padding: 8px; text-align: center; border-bottom: 1px solid #eef2f7; }
+	.info-card { background: white; padding: 30px; border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); margin-top: 35px; border-top: 5px solid #1976d2; }
+	.info-card h2 { font-size: 22px; margin-top: 0; margin-bottom: 25px; color: #0d47a1; text-align: center; }
+    .step-row { display: flex; margin-bottom: 20px; align-items: flex-start; }
+    .step-number { background: #1976d2; color: white; font-size: 18px; font-weight: bold; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 50%; flex-shrink: 0; margin-right: 15px; margin-top: 2px; }
+    .step-content h4 { margin: 0 0 5px 0; font-size: 16px; color: #333; }
+    .step-content p { margin: 0; font-size: 14px; color: #555; line-height: 1.5; }
+
+    /* Modal Styles */
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
+    .modal-content { background: white; padding: 30px; border-radius: 12px; width: 90%; max-width: 500px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); position: relative; }
+    .modal-header { font-size: 20px; font-weight: bold; color: #0d47a1; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+    .close-btn { position: absolute; top: 20px; right: 20px; font-size: 24px; cursor: pointer; color: #999; line-height: 1; border: none; background: none; }
+    .close-btn:hover { color: #333; }
+    .modal-results { background: #e6f4ea; border: 1px solid #c3e6cb; padding: 15px; border-radius: 8px; margin-top: 20px; }
+    .modal-results p { margin: 5px 0; font-size: 14px; display: flex; justify-content: space-between; }
+    .modal-results .highlight { font-weight: bold; font-size: 16px; color: #155724; border-top: 1px solid #c3e6cb; padding-top: 10px; margin-top: 10px; }
+    
+    .limit-badge { display: inline-block; background: #e3f2fd; color: #0d47a1; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin-left: 5px; font-weight: normal; }
+
+    @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } .table-grid { grid-template-columns: 1fr; } .income-section { grid-column: span 1; } .full-width { grid-column: span 1; } .container { padding: 15px; margin-top: -20px; } }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <h1>🇮🇳 Income Tax Calculator 2025-26</h1>
+    <p>Compare Old vs New Tax Regime | Pro Salary Simulator | Instant Analysis</p>
+</div>
+
+<div class="container">
+    <div class="card">
+        <h3>📌 Quick Tax Comparison</h3>
+
+        <form id="taxForm" method="post" action="/calculate">
+            <div class="form-grid">
+
+                <div>
+                    <label>Select Financial Year</label>
+                    <select name="year" id="yearSelect" required>
+                        <option value="2025-26">FY 2025–26 (Latest)</option>
+                        <option value="2024-25">FY 2024–25</option>
+                        <option value="2023-24">FY 2023–24</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label>Select Age Group</label>
+                    <select name="age_group" id="ageSelect" required>
+                        <option value="below60">Below 60 Years</option>
+                        <option value="senior">60–79 Years (Senior)</option>
+                        <option value="super_senior">80+ Years (Super Senior)</option>
+                    </select>
+                </div>
+
+                <div class="income-section">
+                    <h4>💰 Gross Income Breakdown (Slab Rates)</h4>
+                    <div class="form-grid">
+                        <div>
+                            <label>Gross Salary / Pension</label>
+                            <input type="text" inputmode="numeric" name="salary_income" class="num-format" value="0" required>
+                        </div>
+                        <div>
+                            <label>Rental Income (Gross)</label>
+                            <input type="text" inputmode="numeric" name="rental_income" class="num-format" value="0" required>
+                            <small style="font-size: 11px; color: #666;">*30% standard deduction applied automatically</small>
+                        </div>
+                        <div>
+                            <label>Business / Professional Income</label>
+                            <input type="text" inputmode="numeric" name="business_income" class="num-format" value="0" required>
+                        </div>
+                        <div>
+                            <label>Interest Income (FDs, Savings) <span id="lbl80TTA" class="limit-badge">Max Ded: 10k</span></label>
+                            <input type="text" inputmode="numeric" name="interest_income" class="num-format" value="0" required>
+                            <small style="font-size: 11px; color: #666;">*80TTA/TTB applied automatically in Old Regime</small>
+                        </div>
+                        <div>
+                            <label>Dividend Income</label>
+                            <input type="text" inputmode="numeric" name="dividend_income" class="num-format" value="0" required>
+                        </div>
+                        <div>
+                            <label>Foreign Income</label>
+                            <input type="text" inputmode="numeric" name="foreign_income" class="num-format" value="0" required>
+                        </div>
+                        <div>
+                            <label>Other Income</label>
+                            <input type="text" inputmode="numeric" name="other_income_val" class="num-format" value="0" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="income-section" style="background: #fff3e0;">
+                    <h4 style="color: #e67e22;">📈 Capital Gains & Crypto (Special Tax Rates)</h4>
+                    <div class="form-grid">
+                        <div>
+                            <label>Short Term Capital Gains (Equity)</label>
+                            <input type="text" inputmode="numeric" name="stcg_income" class="num-format" value="0" required>
+                        </div>
+                        <div>
+                            <label>Long Term Capital Gains (Equity)</label>
+                            <input type="text" inputmode="numeric" name="ltcg_income" class="num-format" value="0" required>
+                            <small style="font-size: 11px; color: #666;">*Exemption applied automatically based on FY</small>
+                        </div>
+                        <div>
+                            <label>Crypto Gains/Losses (VDA)</label>
+                            <input type="text" inputmode="numeric" name="crypto_income" class="num-format" value="0" required>
+                            <small style="font-size: 11px; color: #d9534f;">*Flat 30% tax under Sec 115BBH. Losses are ignored per rules.</small>
+                        </div>
+                    </div>
+                    <div class="live-total">
+                        Total Gross Income: <span id="liveTotalDisplay">₹0</span>
+                    </div>
+                </div>
+
+                <div class="income-section" style="background: #e3f2fd;">
+                    <h4 style="color: #0277bd;">🏠 Salary Exemptions & Allowances (Old Regime)</h4>
+                    
+                    <div style="background: white; padding: 15px; border-radius: 8px; border: 1px dashed #0277bd; margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                            <div>
+                                <strong style="color: #0d47a1; display: block; margin-bottom: 5px;">House Rent Allowance (HRA)</strong>
+                                <span style="font-size: 12px; color: #555;">Current Exempt HRA computed: <strong id="mainFormExemptHRA" style="color: #28a745;">₹0</strong></span>
+                            </div>
+                            <button type="button" class="btn-outline" onclick="openHraModal()" style="width: auto; margin-top: 0;">🧮 Open HRA Calculator</button>
+                        </div>
+                        
+                        <div style="display: none;">
+                            <input type="text" name="basic_salary" id="main_basic_salary" value="0">
+                            <input type="text" name="hra_received" id="main_hra_received" value="0">
+                            <input type="text" name="rent_paid" id="main_rent_paid" value="0">
+                            <input type="hidden" name="is_metro" id="main_is_metro" value="non_metro">
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div>
+                            <label>Home Loan Interest (Sec 24b) <span class="limit-badge">Max: 2L</span></label>
+                            <input type="text" inputmode="numeric" name="home_loan_interest" class="num-format dynamic-cap" data-max="200000" value="0">
+                        </div>
+                        <div>
+                            <label>Professional Tax Paid <span class="limit-badge">Max: 2,500</span></label>
+                            <input type="text" inputmode="numeric" name="professional_tax" class="num-format dynamic-cap" data-max="2500" value="0">
+                        </div>
+                        <div>
+                            <label>Leave Travel Allowance (LTA)</label>
+                            <input type="text" inputmode="numeric" name="lta_exemption" class="num-format" value="0">
+                            <small style="font-size: 11px; color: #666;">*Enter the eligible exempt amount based on actual travel bills.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="income-section" style="background: #fdfdfd;">
+                    <h4 style="color: #d9534f;">📉 Tax Deductions (Old Regime)</h4>
+                    <div class="form-grid">
+                        <div>
+                            <label>80C Deduction (PPF, ELSS, EPF) <span class="limit-badge">Max: 1.5L</span></label>
+                            <input type="text" inputmode="numeric" name="deduction_80c" class="num-format dynamic-cap" data-max="150000" value="0">
+                        </div>
+                        <div>
+                            <label>NPS Additional 80CCD(1B) <span class="limit-badge">Max: 50k</span></label>
+                            <input type="text" inputmode="numeric" name="nps_80ccd1b" class="num-format dynamic-cap" data-max="50000" value="0">
+                        </div>
+                        <div>
+                            <label id="lbl80D">80D Deduction (Health Ins.) <span class="limit-badge">Max: 25k</span></label>
+                            <input type="text" inputmode="numeric" name="deduction_80d" id="input80d" class="num-format dynamic-cap" data-max="25000" value="0">
+                        </div>
+                        <div>
+                            <label>Education Loan Interest (80E)</label>
+                            <input type="text" inputmode="numeric" name="deduction_80e" class="num-format" value="0">
+                        </div>
+                        <div>
+                            <label>Donations (80G - 100% Exemption)</label>
+                            <input type="text" inputmode="numeric" name="deduction_80g_100" class="num-format" value="0">
+                            <small style="font-size: 11px; color: #666;">e.g., PM National Relief Fund</small>
+                        </div>
+                        <div>
+                            <label>Donations (80G - 50% Exemption)</label>
+                            <input type="text" inputmode="numeric" name="deduction_80g_50" class="num-format" value="0">
+                            <small style="font-size: 11px; color: #666;">10% AGTI cap applied automatically in backend.</small>
+                        </div>
+                        <div>
+                            <label>Other Deductions</label>
+                            <input type="text" inputmode="numeric" name="other_deductions" class="num-format" value="0">
+                        </div>
+                    </div>
+                    <div class="live-preview-box">
+                        <div style="margin-bottom: 5px;">Estimated New Regime Tax: <strong style="color: #007bff;" id="previewNewTax">₹0</strong></div>
+                        <div>Estimated Old Regime Tax: <strong style="color: #d9534f;" id="previewOldTax">₹0</strong></div>
+                        <small style="color: #999; font-size: 11px;">(Live quick approximation)</small>
+                    </div>
+                </div>
+
+                <div class="income-section" style="background: #f4f6f9;">
+                    <h4 style="color: #6c757d;">🔮 Future Projection Settings</h4>
+                    <div class="form-grid">
+                        <div>
+                            <label>Expected Annual Income Growth (%)</label>
+                            <input type="number" name="growth_rate" value="10" min="0" max="100" step="1" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #dfe6e9; font-size: 14px; box-sizing: border-box;">
+                            <small style="font-size: 11px; color: #666;">Used to simulate your 5-year tax trajectory.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="full-width">
+                    <button type="submit">Compare & Produce Pro Advisory</button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+    <div class="card">
+        <h3 id="slabTitle">Income Tax Slab Rates</h3>
+        <div class="table-grid">
+            <div>
+                <h4>New Regime</h4>
+                <table id="newRegimeTable"></table>
+            </div>
+            <div>
+                <h4>Old Regime (Below 60)</h4>
+                <table id="oldRegimeTable"></table>
+            </div>
+        </div>
+    </div>
+	
+	<div class="info-card">
+        <h2>How to Use the Tax Calculator</h2>
+        
+        <div class="step-row">
+            <div class="step-number">1</div>
+            <div class="step-content">
+                <h4>Select Financial Year & Age</h4>
+                <p>Start by choosing the relevant Financial Year. The calculator will automatically update slab rates, standard deductions, and capital gains rules. Adjusting your age will automatically cap deductions like 80D properly.</p>
+            </div>
+        </div>
+
+        <div class="step-row">
+            <div class="step-number">2</div>
+            <div class="step-content">
+                <h4>Enter Your Income Sources</h4>
+                <p>Fill in your Gross Salary, Business income, or Rental income. For Rental income, the tool automatically applies the 30% standard deduction for repairs.</p>
+            </div>
+        </div>
+
+        <div class="step-row">
+            <div class="step-number">3</div>
+            <div class="step-content">
+                <h4>Include Capital Gains & Crypto</h4>
+                <p>Enter any profits from stocks (STCG/LTCG). If you have Crypto gains, the tool applies a flat 30% tax as per Section 115BBH. Losses are intentionally ignored as per tax laws.</p>
+            </div>
+        </div>
+
+        <div class="step-row">
+            <div class="step-number">4</div>
+            <div class="step-content">
+                <h4>Calculate HRA & Deductions (Old Regime)</h4>
+                <p>Click the "Open HRA Calculator" to let the software legally determine your exempted rent amount. Fill in your 80C and 80D investments to see if the Old Regime saves you more money.</p>
+            </div>
+        </div>
+
+        <div class="step-row">
+            <div class="step-number">5</div>
+            <div class="step-content">
+                <h4>Compare & Analyze</h4>
+                <p>The "Live Preview" box updates instantly. Click <strong>"Compare & Produce Pro Advisory"</strong> to get a detailed breakdown and professional advice on which regime to choose.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="hraModal">
+    <div class="modal-content">
+        <button class="close-btn" type="button" onclick="closeHraModal()">&times;</button>
+        <div class="modal-header">🏠 Smart HRA Calculator</div>
+        
+        <p style="font-size: 13px; color: #555; margin-top: 0;">Calculate your legal House Rent Allowance exemption based on Section 10(13A).</p>
+
+        <div style="margin-bottom: 15px;">
+            <label>Basic Salary + DA (Yearly)</label>
+            <input type="text" id="modal_basic" class="num-format modal-calc" value="0">
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <label>HRA Received from Employer (Yearly)</label>
+            <input type="text" id="modal_hra_rec" class="num-format modal-calc" value="0">
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label>Total Rent Paid (Yearly)</label>
+            <input type="text" id="modal_rent" class="num-format modal-calc" value="0">
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label>City Type</label>
+            <select id="modal_city" class="modal-calc">
+                <option value="non_metro">Non-Metro (40% of Basic)</option>
+                <option value="metro">Metro - Delhi, Mumbai, Kolkata, Chennai (50% of Basic)</option>
+            </select>
+        </div>
+
+        <div class="modal-results">
+            <p>1. Actual HRA Received: <strong id="res_actual">₹0</strong></p>
+            <p>2. Rent Paid minus 10% Basic: <strong id="res_rent">₹0</strong></p>
+            <p>3. <span id="res_city_percent">40%</span> of Basic Salary: <strong id="res_basic">₹0</strong></p>
+            <div class="highlight">
+                <span>Final Exempt HRA (Minimum of above):</span>
+                <span id="res_exempt">₹0</span>
+            </div>
+        </div>
+
+        <button type="button" onclick="applyHraToMain()" style="width: 100%; margin-top: 20px; background: #28a745;">Save & Apply to Tax Form</button>
+    </div>
+</div>
+
+<script>
+    const taxData = {{ tax_data | tojson | safe }};
+
+    // Number Formatting Utility
+    const formatNumber = (e) => {
+        let val = e.target.value.replace(/[^0-9-]/g, ''); 
+        let isNegative = val.startsWith('-');
+        val = val.replace(/-/g, '');
+        
+        if(val === '') { 
+            e.target.value = isNegative ? '-' : ''; 
+        } else { 
+            let parsed = parseInt(val, 10);
+            
+            // Dynamic Winman-style Capping Logic
+            if(e.target.classList.contains('dynamic-cap')) {
+                let maxVal = parseInt(e.target.getAttribute('data-max'), 10);
+                if (parsed > maxVal) {
+                    parsed = maxVal; // Auto-cap the input
+                }
+            }
+            e.target.value = (isNegative ? '-' : '') + parsed.toLocaleString('en-IN'); 
+        }
+        
+        // Decide which preview to update based on where the input is
+        if(e.target.classList.contains('modal-calc')) {
+            calculateHraLive();
+        } else {
+            calculateLivePreview(); 
+        }
+    };
+
+    function getVal(id_or_name, is_name=true) {
+        let el = is_name ? document.querySelector(`[name="${id_or_name}"]`) : document.getElementById(id_or_name);
+        if(!el) return 0;
+        let numStr = el.value.replace(/,/g, '');
+        return Number(numStr) || 0;
+    }
+
+    // Attach listeners
+    document.querySelectorAll('.num-format').forEach(input => { 
+        input.addEventListener('input', formatNumber); 
+    });
+    document.getElementById('modal_city').addEventListener('change', calculateHraLive);
+
+    // --- Dynamic Age Logic (Winman UI rules) ---
+    document.getElementById('ageSelect').addEventListener('change', function() {
+        const age = this.value;
+        const lbl80D = document.getElementById('lbl80D');
+        const input80D = document.getElementById('input80d');
+        const lbl80TTA = document.getElementById('lbl80TTA');
+
+        if (age === 'senior' || age === 'super_senior') {
+            lbl80D.innerHTML = '80D Deduction (Health Ins.) <span class="limit-badge">Max: 50k</span>';
+            input80D.setAttribute('data-max', '50000');
+            lbl80TTA.innerHTML = '<span class="limit-badge">80TTB Max Ded: 50k</span>';
+        } else {
+            lbl80D.innerHTML = '80D Deduction (Health Ins.) <span class="limit-badge">Max: 25k</span>';
+            input80D.setAttribute('data-max', '25000');
+            lbl80TTA.innerHTML = '<span class="limit-badge">80TTA Max Ded: 10k</span>';
+            
+            // Re-validate if user had entered 50k but switched back to below 60
+            let current80D = getVal('deduction_80d');
+            if (current80D > 25000) {
+                input80D.value = "25,000";
+            }
+        }
+        calculateLivePreview();
+    });
+
+    // --- HRA Modal Logic ---
+    function openHraModal() {
+        document.getElementById('hraModal').style.display = 'flex';
+        // Pre-fill modal with existing hidden values if they exist
+        document.getElementById('modal_basic').value = document.getElementById('main_basic_salary').value;
+        document.getElementById('modal_hra_rec').value = document.getElementById('main_hra_received').value;
+        document.getElementById('modal_rent').value = document.getElementById('main_rent_paid').value;
+        document.getElementById('modal_city').value = document.getElementById('main_is_metro').value;
+        calculateHraLive();
+    }
+
+    function closeHraModal() {
+        document.getElementById('hraModal').style.display = 'none';
+    }
+
+    function calculateHraLive() {
+        let basic = getVal('modal_basic', false);
+        let hraRec = getVal('modal_hra_rec', false);
+        let rent = getVal('modal_rent', false);
+        let isMetro = document.getElementById('modal_city').value;
+
+        let cond1 = hraRec;
+        let cond2 = Math.max(0, rent - (0.10 * basic));
+        let cond3 = (isMetro === 'metro') ? (0.50 * basic) : (0.40 * basic);
+
+        let exempt = 0;
+        if (basic > 0 && hraRec > 0 && rent > 0) {
+            exempt = Math.min(cond1, cond2, cond3);
+        }
+
+        document.getElementById('res_actual').innerText = "₹" + cond1.toLocaleString('en-IN');
+        document.getElementById('res_rent').innerText = "₹" + cond2.toLocaleString('en-IN');
+        document.getElementById('res_city_percent').innerText = (isMetro === 'metro') ? "50%" : "40%";
+        document.getElementById('res_basic').innerText = "₹" + cond3.toLocaleString('en-IN');
+        document.getElementById('res_exempt').innerText = "₹" + exempt.toLocaleString('en-IN');
+        
+        return exempt;
+    }
+
+    function applyHraToMain() {
+        // Sync values to hidden form fields
+        document.getElementById('main_basic_salary').value = document.getElementById('modal_basic').value;
+        document.getElementById('main_hra_received').value = document.getElementById('modal_hra_rec').value;
+        document.getElementById('main_rent_paid').value = document.getElementById('modal_rent').value;
+        document.getElementById('main_is_metro').value = document.getElementById('modal_city').value;
+        
+        // Update display text
+        let exemptAmount = calculateHraLive();
+        document.getElementById('mainFormExemptHRA').innerText = "₹" + exemptAmount.toLocaleString('en-IN');
+        
+        closeHraModal();
+        calculateLivePreview();
+    }
+
+
+    // --- Core Tax Logic ---
+    document.getElementById('taxForm').addEventListener('submit', function(e) {
+        // Clean commas from ALL inputs before posting
+        const inputsToClean = [
+            ...document.querySelectorAll('.num-format'),
+            document.getElementById('main_basic_salary'),
+            document.getElementById('main_hra_received'),
+            document.getElementById('main_rent_paid')
+        ];
+        
+        inputsToClean.forEach(input => {
+            if (input && input.value) {
+                input.value = input.value.replace(/,/g, '');
+                if(input.value === '' || input.value === '-') input.value = '0';
+            }
+        });
+    });
+
+    function getSlabTax(income, slabs) {
+        let tax = 0;
+        let prevLimit = 0;
+        for (let slab of slabs) {
+            let taxableAmount = Math.max(0, Math.min(income, slab.limit) - prevLimit);
+            tax += taxableAmount * slab.rate;
+            if (income <= slab.limit) break;
+            prevLimit = slab.limit;
+        }
+        return tax;
+    }
+
+    function calculateLivePreview() {
+        const year = document.getElementById('yearSelect').value;
+        const age = document.getElementById('ageSelect').value;
+        const data = taxData[year];
+        if(!data) return;
+
+        const salary = getVal("salary_income");
+        const rental = getVal("rental_income");
+        const business = getVal("business_income");
+        const interest = getVal("interest_income");
+        const dividend = getVal("dividend_income");
+        const foreign = getVal("foreign_income");
+        const other = getVal("other_income_val");
+        
+        const stcg = getVal("stcg_income");
+        const ltcg = getVal("ltcg_income");
+        const crypto = getVal("crypto_income");
+
+        const homeLoan = getVal("home_loan_interest");
+        const lta = getVal("lta_exemption");
+        const pt = getVal("professional_tax");
+
+        const d80c = getVal("deduction_80c");
+        const d80d = getVal("deduction_80d");
+        const nps = getVal("nps_80ccd1b");
+        const d80e = getVal("deduction_80e");
+        const d80g100 = getVal("deduction_80g_100");
+        const d80g50 = getVal("deduction_80g_50");
+        const dOther = getVal("other_deductions");
+
+        // Fetch hidden HRA data
+        const basic = getVal("main_basic_salary", false);
+        const hraRec = getVal("main_hra_received", false);
+        const rentPd = getVal("main_rent_paid", false);
+        const isMetro = document.getElementById("main_is_metro").value;
+
+        const totalGross = salary + rental + business + interest + dividend + foreign + other + stcg + ltcg + Math.max(0, crypto);
+        document.getElementById('liveTotalDisplay').innerText = "₹" + totalGross.toLocaleString('en-IN');
+
+        let stcgRate = data.stcg_rate || 0.20;
+        let ltcgRate = data.ltcg_rate || 0.125;
+        let ltcgExempt = data.ltcg_exemption || 125000;
+
+        let stcgTax = stcg * stcgRate;
+        let ltcgTax = Math.max(0, ltcg - ltcgExempt) * ltcgRate;
+        let cryptoTax = Math.max(0, crypto) * 0.30;
+        let specialTax = stcgTax + ltcgTax + cryptoTax;
+
+        let newStdDed = Math.min(salary, data.standard_deduction);
+        let newTaxableRental = Math.max(0, (rental * 0.70) - homeLoan); 
+        let newSlabIncome = Math.max(0, (salary - newStdDed) + newTaxableRental + business + interest + dividend + foreign + other);
+        let newSlabTax = getSlabTax(newSlabIncome, data.new_regime_slabs);
+        
+        let newTotalTaxable = newSlabIncome + stcg + ltcg + Math.max(0, crypto);
+        let newTaxBeforeRebate = newSlabTax + specialTax;
+        
+        let newTaxEligibleForRebate = newSlabTax + stcgTax + cryptoTax;
+        let newRebate = 0;
+        let newTaxAfterRebate = newTaxBeforeRebate;
+
+        if (newTotalTaxable <= data.new_rebate_limit) {
+            newRebate = newTaxEligibleForRebate;
+            newTaxAfterRebate = newTaxBeforeRebate - newRebate;
+        } else {
+            let excess = newTotalTaxable - data.new_rebate_limit;
+            if (newTaxEligibleForRebate > excess) {
+                newRebate = newTaxEligibleForRebate - excess;
+                newTaxAfterRebate = newTaxBeforeRebate - newRebate;
+            }
+        }
+        let newFinal = newTaxAfterRebate * 1.04;
+
+        // Old Regime HRA Backend simulation
+        let hraExemption = 0;
+        if (basic > 0 && hraRec > 0 && rentPd > 0) {
+            let cond2 = Math.max(0, rentPd - (0.10 * basic));
+            let cond3 = isMetro === 'metro' ? (0.50 * basic) : (0.40 * basic);
+            hraExemption = Math.min(hraRec, cond2, cond3);
+        }
+        
+        let totalExempt10 = Math.min(salary, hraExemption + lta);
+        let salaryPostExempt = salary - totalExempt10;
+        
+        let oldStdLimit = data.old_standard_deduction || 50000;
+        let ptAllowed = Math.min(pt, 2500);
+        let sec16Deds = Math.min(salaryPostExempt, oldStdLimit + ptAllowed);
+        let oldTaxableSalary = Math.max(0, salaryPostExempt - sec16Deds);
+        
+        let oldTaxableRental = Math.max((rental * 0.70) - homeLoan, -200000);
+        let ded80tta = (age === 'senior' || age === 'super_senior') ? Math.min(interest, 50000) : Math.min(interest, 10000);
+
+        let allowed80c = Math.min(Math.max(d80c, 0), 150000);
+        let max80d = (age === 'senior' || age === 'super_senior') ? 50000 : 25000;
+        let allowed80d = Math.min(Math.max(d80d, 0), max80d);
+        let allowedNps = Math.min(Math.max(nps, 0), 50000);
+        
+        let baseChapVI = allowed80c + allowed80d + allowedNps + ded80tta + Math.max(d80e, 0) + Math.max(dOther, 0);
+        let grossSlabOld = oldTaxableSalary + oldTaxableRental + business + interest + dividend + foreign + other;
+        
+        let agti = Math.max(0, grossSlabOld - baseChapVI);
+        let limit10Percent = 0.10 * agti;
+        let allowed80g50 = Math.min(Math.max(d80g50, 0), limit10Percent) * 0.50;
+        let allowed80g100 = Math.max(d80g100, 0);
+        
+        let chapVI = baseChapVI + allowed80g50 + allowed80g100;
+
+        let oldSlabIncome = Math.max(0, grossSlabOld - chapVI);
+        let oldSlabTax = getSlabTax(oldSlabIncome, data.old_regime_slabs[age]);
+        
+        let oldTotalTaxable = oldSlabIncome + stcg + ltcg + Math.max(0, crypto);
+        let oldTaxBeforeRebate = oldSlabTax + specialTax;
+        
+        let oldTaxEligibleForRebate = oldSlabTax + stcgTax + cryptoTax;
+        let oldRebate = (oldTotalTaxable <= data.old_rebate_limit) ? Math.min(oldTaxEligibleForRebate, 12500) : 0;
+        let oldFinal = (oldTaxBeforeRebate - oldRebate) * 1.04;
+
+        document.getElementById('previewNewTax').innerText = "₹" + Math.round(newFinal).toLocaleString('en-IN');
+        document.getElementById('previewOldTax').innerText = "₹" + Math.round(oldFinal).toLocaleString('en-IN');
+    }
+
+    document.getElementById('yearSelect').addEventListener('change', () => { renderTables(); calculateLivePreview(); });
+
+    calculateLivePreview(); 
+
+    function renderTables() {
+        const selectedYear = document.getElementById('yearSelect').value;
+        const data = taxData[selectedYear];
+        document.getElementById('slabTitle').innerText = `Income Tax Slab Rates (FY ${selectedYear})`;
+
+        let newHtml = `<tr><th>Income Range</th><th>Tax Rate</th></tr>`;
+        let prevLimit = 0;
+        data.new_regime_slabs.forEach((slab, i) => {
+            let rangeText = (i === data.new_regime_slabs.length - 1) ? `Above ${prevLimit.toLocaleString('en-IN')}` : `${prevLimit.toLocaleString('en-IN')} – ${slab.limit.toLocaleString('en-IN')}`;
+            newHtml += `<tr><td>${rangeText}</td><td>${slab.rate * 100}%</td></tr>`;
+            prevLimit = slab.limit;
+        });
+        document.getElementById('newRegimeTable').innerHTML = newHtml;
+
+        let oldHtml = `<tr><th>Income Range</th><th>Tax Rate</th></tr>`;
+        prevLimit = 0;
+        data.old_regime_slabs.below60.forEach((slab, i) => {
+            let rangeText = (i === data.old_regime_slabs.below60.length - 1) ? `Above ${prevLimit.toLocaleString('en-IN')}` : `${prevLimit.toLocaleString('en-IN')} – ${slab.limit.toLocaleString('en-IN')}`;
+            oldHtml += `<tr><td>${rangeText}</td><td>${slab.rate * 100}%</td></tr>`;
+            prevLimit = slab.limit;
+        });
+        document.getElementById('oldRegimeTable').innerHTML = oldHtml;
+    }
+    renderTables();
+</script>
+</body>
+</html>
