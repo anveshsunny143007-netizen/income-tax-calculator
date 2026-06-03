@@ -24,12 +24,14 @@
 	table { width: 100%; border-collapse: collapse; font-size: 13px; }
 	th { background: #f1f4f9; padding: 10px; text-align: center; }
 	td { padding: 8px; text-align: center; border-bottom: 1px solid #eef2f7; }
-	.info-card { background: white; padding: 30px; border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); margin-top: 35px; border-top: 5px solid #1976d2; }
-	.info-card h2 { font-size: 22px; margin-top: 0; margin-bottom: 25px; color: #0d47a1; text-align: center; }
-    .step-row { display: flex; margin-bottom: 20px; align-items: flex-start; }
-    .step-number { background: #1976d2; color: white; font-size: 18px; font-weight: bold; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 50%; flex-shrink: 0; margin-right: 15px; margin-top: 2px; }
-    .step-content h4 { margin: 0 0 5px 0; font-size: 16px; color: #333; }
-    .step-content p { margin: 0; font-size: 14px; color: #555; line-height: 1.5; }
+	.info-card { background: transparent; padding: 0; margin-top: 50px; border: none; box-shadow: none; }
+	.info-card h2 { font-size: 24px; margin-bottom: 30px; color: #0a2540; text-align: center; font-weight: 700; }
+	.how-to-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+	.step-card { background: white; padding: 25px; border-radius: 16px; border: 1px solid #eef2f7; box-shadow: 0 4px 6px rgba(0,0,0,0.02); transition: all 0.3s ease; position: relative; overflow: hidden; }
+	.step-card:hover { transform: translateY(-5px); box-shadow: 0 12px 24px rgba(25, 118, 210, 0.08); border-color: #cce0f5; }
+	.step-badge { background: #f0f7ff; color: #1976d2; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; margin-bottom: 16px; }
+	.step-title { font-size: 16px; color: #0a2540; margin: 0 0 10px 0; font-weight: 600; }
+	.step-text { margin: 0; font-size: 13.5px; color: #636e72; line-height: 1.6; }
 
     /* Modal Styles */
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
@@ -251,47 +253,38 @@
 	<div class="info-card">
         <h2>How to Use the Tax Calculator</h2>
         
-        <div class="step-row">
-            <div class="step-number">1</div>
-            <div class="step-content">
-                <h4>Select Financial Year & Age</h4>
-                <p>Start by choosing the relevant Financial Year. The calculator will automatically update slab rates, standard deductions, and capital gains rules. Adjusting your age will automatically cap deductions like 80D properly.</p>
+        <div class="how-to-grid">
+            <div class="step-card">
+                <div class="step-badge">1</div>
+                <h4 class="step-title">Select Financial Year & Age</h4>
+                <p class="step-text">Start by choosing the relevant Financial Year. The calculator will automatically update slab rates, standard deductions, and capital gains rules. Adjusting your age will automatically cap deductions like 80D properly.</p>
             </div>
-        </div>
 
-        <div class="step-row">
-            <div class="step-number">2</div>
-            <div class="step-content">
-                <h4>Enter Your Income Sources</h4>
-                <p>Fill in your Gross Salary, Business income, or Rental income. For Rental income, the tool automatically applies the 30% standard deduction for repairs.</p>
+            <div class="step-card">
+                <div class="step-badge">2</div>
+                <h4 class="step-title">Enter Your Income Sources</h4>
+                <p class="step-text">Fill in your Gross Salary, Business income, or Rental income. For Rental income, the tool automatically applies the 30% standard deduction for repairs.</p>
             </div>
-        </div>
 
-        <div class="step-row">
-            <div class="step-number">3</div>
-            <div class="step-content">
-                <h4>Include Capital Gains & Crypto</h4>
-                <p>Enter any profits from stocks (STCG/LTCG). If you have Crypto gains, the tool applies a flat 30% tax as per Section 115BBH. Losses are intentionally ignored as per tax laws.</p>
+            <div class="step-card">
+                <div class="step-badge">3</div>
+                <h4 class="step-title">Include Capital Gains & Crypto</h4>
+                <p class="step-text">Enter any profits from stocks (STCG/LTCG). If you have Crypto gains, the tool applies a flat 30% tax as per Section 115BBH. Losses are intentionally ignored as per tax laws.</p>
             </div>
-        </div>
 
-        <div class="step-row">
-            <div class="step-number">4</div>
-            <div class="step-content">
-                <h4>Calculate HRA & Deductions (Old Regime)</h4>
-                <p>Click the "Open HRA Calculator" to let the software legally determine your exempted rent amount. Fill in your 80C and 80D investments to see if the Old Regime saves you more money.</p>
+            <div class="step-card">
+                <div class="step-badge">4</div>
+                <h4 class="step-title">Calculate HRA & Deductions</h4>
+                <p class="step-text">Click the "Open HRA Calculator" to let the software legally determine your exempted rent amount. Fill in your 80C and 80D investments to see if the Old Regime saves you more money.</p>
             </div>
-        </div>
 
-        <div class="step-row">
-            <div class="step-number">5</div>
-            <div class="step-content">
-                <h4>Compare & Analyze</h4>
-                <p>The "Live Preview" box updates instantly. Click <strong>"Compare & Produce Pro Advisory"</strong> to get a detailed breakdown and professional advice on which regime to choose.</p>
+            <div class="step-card" style="border: 1px solid #1976d2; background: #f4f9ff;">
+                <div class="step-badge" style="background: #1976d2; color: white;">5</div>
+                <h4 class="step-title" style="color: #1976d2;">Compare & Analyze</h4>
+                <p class="step-text" style="color: #4a5568;">The "Live Preview" box updates instantly. Click <strong>"Compare & Produce Pro Advisory"</strong> to get a detailed breakdown and professional advice on which regime to choose.</p>
             </div>
         </div>
     </div>
-</div>
 
 <div class="modal-overlay" id="hraModal">
     <div class="modal-content">
