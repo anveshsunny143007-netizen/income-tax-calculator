@@ -26,12 +26,26 @@
 	td { padding: 8px; text-align: center; border-bottom: 1px solid #eef2f7; }
 	.info-card { background: transparent; padding: 0; margin-top: 50px; border: none; box-shadow: none; }
 	.info-card h2 { font-size: 24px; margin-bottom: 30px; color: #0a2540; text-align: center; font-weight: 700; }
-	.how-to-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
-	.step-card { background: white; padding: 25px; border-radius: 16px; border: 1px solid #eef2f7; box-shadow: 0 4px 6px rgba(0,0,0,0.02); transition: all 0.3s ease; position: relative; overflow: hidden; }
+	
+    /* Widened the minmax to force a 2-column layout on standard screens */
+    .how-to-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
+	
+    .step-card { background: white; padding: 25px; border-radius: 16px; border: 1px solid #eef2f7; box-shadow: 0 4px 6px rgba(0,0,0,0.02); transition: all 0.3s ease; position: relative; overflow: hidden; }
 	.step-card:hover { transform: translateY(-5px); box-shadow: 0 12px 24px rgba(25, 118, 210, 0.08); border-color: #cce0f5; }
 	.step-badge { background: #f0f7ff; color: #1976d2; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; margin-bottom: 16px; }
 	.step-title { font-size: 16px; color: #0a2540; margin: 0 0 10px 0; font-weight: 600; }
 	.step-text { margin: 0; font-size: 13.5px; color: #636e72; line-height: 1.6; }
+
+    /* New classes for the full-width bottom banner */
+    .step-final { grid-column: 1 / -1; display: flex; align-items: center; background: linear-gradient(135deg, #f4f9ff, #e1effe); border: 1px solid #1976d2; }
+    .step-final .step-badge { margin-bottom: 0; margin-right: 20px; flex-shrink: 0; background: #1976d2; color: white; }
+    .step-final-content { flex-grow: 1; }
+
+    /* Stack it vertically on small mobile screens */
+    @media (max-width: 768px) {
+        .step-final { flex-direction: column; align-items: flex-start; }
+        .step-final .step-badge { margin-bottom: 16px; }
+    }
 
     /* Modal Styles */
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
@@ -278,10 +292,13 @@
                 <p class="step-text">Click the "Open HRA Calculator" to let the software legally determine your exempted rent amount. Fill in your 80C and 80D investments to see if the Old Regime saves you more money.</p>
             </div>
 
-            <div class="step-card" style="border: 1px solid #1976d2; background: #f4f9ff;">
-                <div class="step-badge" style="background: #1976d2; color: white;">5</div>
-                <h4 class="step-title" style="color: #1976d2;">Compare & Analyze</h4>
-                <p class="step-text" style="color: #4a5568;">The "Live Preview" box updates instantly. Click <strong>"Compare & Produce Pro Advisory"</strong> to get a detailed breakdown and professional advice on which regime to choose.</p>
+            <!-- Full width banner step -->
+            <div class="step-card step-final">
+                <div class="step-badge">5</div>
+                <div class="step-final-content">
+                    <h4 class="step-title" style="color: #0d47a1;">Compare & Analyze</h4>
+                    <p class="step-text" style="color: #4a5568;">The "Live Preview" box updates instantly. Click <strong>"Compare & Produce Pro Advisory"</strong> to get a detailed breakdown and professional advice on which regime to choose.</p>
+                </div>
             </div>
         </div>
     </div>
