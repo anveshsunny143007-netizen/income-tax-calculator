@@ -360,7 +360,7 @@ def generate_tax_pdf(income, income_breakdown, year, comparison, new_data, old_d
     p = canvas.Canvas(buffer, pagesize=A4)
     width, height = A4
 
-    # Font Handling (Use Helvetica-Bold for headers if DejaVu lacks a bold file)
+    # Font Handling
     try:
         pdfmetrics.registerFont(TTFont("DejaVu", "DejaVuSans.ttf"))
         font_base = "DejaVu"
@@ -369,36 +369,39 @@ def generate_tax_pdf(income, income_breakdown, year, comparison, new_data, old_d
         font_base = "Helvetica"
         font_bold = "Helvetica-Bold"
 
-    # --- 1. Background Watermark ---
-    p.saveState()
-    p.setFont(font_bold, 70)
-    p.setFillGray(0.96)
-    p.translate(width/2, height/2)
-    p.rotate(45)
-    p.drawCentredString(0, 0, "CONFIDENTIAL REPORT")
-    p.restoreState()
+    # Helper function to draw headers on new pages
+    def draw_watermark_and_header(canvas_obj):
+        # Watermark
+        canvas_obj.saveState()
+        canvas_obj.setFont(font_bold, 70)
+        canvas_obj.setFillGray(0.96)
+        canvas_obj.translate(width/2, height/2)
+        canvas_obj.rotate(45)
+        canvas_obj.drawCentredString(0, 0, "CONFIDENTIAL REPORT")
+        canvas_obj.restoreState()
 
-    # --- 2. Corporate Top Banner ---
-    p.setFillColor(colors.HexColor("#0a2540")) # Deep Navy
-    p.rect(0, height - 90, width, 90, fill=1, stroke=0)
-    
-    # Attempt to load Logo (graceful fallback if missing)
-    text_start_x = 40
-    try:
-        p.drawImage("logo.png", 40, height - 75, width=60, height=60, preserveAspectRatio=True, mask='auto')
-        text_start_x = 120
-    except:
-        pass # Skip logo if file is missing/moved
+        # Corporate Top Banner
+        canvas_obj.setFillColor(colors.HexColor("#0a2540")) 
+        canvas_obj.rect(0, height - 90, width, 90, fill=1, stroke=0)
+        
+        text_start_x = 40
+        try:
+            canvas_obj.drawImage("logo.png", 40, height - 75, width=60, height=60, preserveAspectRatio=True, mask='auto')
+            text_start_x = 120
+        except:
+            pass 
 
-    p.setFillColor(colors.white)
-    p.setFont(font_bold, 22)
-    p.drawString(text_start_x, height - 45, "Institutional Tax Advisory")
-    p.setFont(font_base, 11)
-    p.drawString(text_start_x, height - 65, f"Assessment Framework: FY {year}  |  Generated: {datetime.now().strftime('%d %b %Y, %H:%M')}")
+        canvas_obj.setFillColor(colors.white)
+        canvas_obj.setFont(font_bold, 22)
+        canvas_obj.drawString(text_start_x, height - 45, "Institutional Tax Advisory")
+        canvas_obj.setFont(font_base, 11)
+        canvas_obj.drawString(text_start_x, height - 65, f"Assessment Framework: FY {year}  |  Generated: {datetime.now().strftime('%d %b %Y, %H:%M')}")
+        return height - 130
 
-    y = height - 130
+    # Draw Page 1 Header
+    y = draw_watermark_and_header(p)
 
-    # --- 3. Executive Recommendation Box ---
+    # --- 1. Executive Recommendation Box ---
     best_regime = "New Regime" if new_data["final_tax"] < old_data["final_tax"] else "Old Regime"
     savings = abs(new_data["final_tax"] - old_data["final_tax"])
 
@@ -417,7 +420,7 @@ def generate_tax_pdf(income, income_breakdown, year, comparison, new_data, old_d
     
     y -= 120
 
-    # --- 4. Core Metrics Table ---
+    # --- 2. Core Metrics Table ---
     p.setFillColor(colors.HexColor("#0a2540"))
     p.setFont(font_bold, 14)
     p.drawString(40, y, "Fiscal Baseline & Regime Comparison")
@@ -433,36 +436,31 @@ def generate_tax_pdf(income, income_breakdown, year, comparison, new_data, old_d
 
     table = Table(table_data, colWidths=[200, 150, 150])
     table.setStyle(TableStyle([
-        # Header Style
         ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#1976d2')),
         ('TEXTCOLOR', (0,0), (-1,0), colors.white),
         ('FONTNAME', (0,0), (-1,0), font_bold),
         ('FONTSIZE', (0,0), (-1,0), 11),
         ('BOTTOMPADDING', (0,0), (-1,0), 10),
         ('TOPPADDING', (0,0), (-1,0), 10),
-        # Body Style
         ('BACKGROUND', (0,1), (-1,-2), colors.HexColor('#ffffff')),
         ('TEXTCOLOR', (0,1), (-1,-1), colors.HexColor('#2d3436')),
         ('FONTNAME', (0,1), (-1,-1), font_base),
         ('FONTSIZE', (0,1), (-1,-1), 11),
         ('BOTTOMPADDING', (0,1), (-1,-1), 8),
         ('TOPPADDING', (0,1), (-1,-1), 8),
-        # Alternating row color
         ('BACKGROUND', (0,2), (-1,2), colors.HexColor('#f8f9fa')),
-        # Footer / Final Liability Row
         ('BACKGROUND', (0,-1), (-1,-1), colors.HexColor('#e3f2fd')),
         ('FONTNAME', (0,-1), (-1,-1), font_bold),
         ('TEXTCOLOR', (0,-1), (-1,-1), colors.HexColor('#0a2540')),
-        # Borders & Alignment
         ('ALIGN', (1,0), (-1,-1), 'RIGHT'),
         ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#dfe6e9')),
     ]))
     
-    table_width, table_height = table.wrap(0, 0)
-    table.drawOn(p, 40, y - table_height)
-    y = y - table_height - 40
+    table.wrapOn(p, width, height)
+    table.drawOn(p, 40, y - table._height)
+    y = y - table._height - 40
 
-    # --- 5. Special Capital Assets ---
+    # --- 3. Special Capital Assets (Printed on both Standard & Detailed if present) ---
     if income_breakdown.get('STCG', 0) > 0 or income_breakdown.get('LTCG', 0) > 0 or income_breakdown.get('Crypto (VDA)', 0) > 0:
         p.setFillColor(colors.HexColor("#0a2540"))
         p.setFont(font_bold, 14)
@@ -481,7 +479,91 @@ def generate_tax_pdf(income, income_breakdown, year, comparison, new_data, old_d
             p.drawString(50, y, f"• Virtual Digital Assets: Rs. {income_breakdown['Crypto (VDA)']:,.0f} (Calculated Tax: Rs. {new_data['crypto_tax']:,.0f})")
             y -= 30
 
-    # --- 6. Footer Disclaimer ---
+    # --- 4. ADVANCED ADVISORY SECTION (Detailed Only) ---
+    if report_type == "detailed":
+        
+        # Check if we need a new page before drawing the detailed section
+        if y < 250:
+            p.showPage()
+            y = draw_watermark_and_header(p)
+            
+        # A. Deductions Breakdown (Old Regime)
+        p.setFillColor(colors.HexColor("#0a2540"))
+        p.setFont(font_bold, 14)
+        p.drawString(40, y, "Itemized Exemption & Deduction Breakdown (Old Regime)")
+        y -= 25
+        
+        p.setFont(font_base, 11)
+        p.setFillColor(colors.HexColor("#4a5568"))
+        
+        deds = []
+        if old_data.get('hra_exemption', 0) > 0: deds.append(f"HRA Exemption (Sec 10): Rs. {old_data['hra_exemption']:,.0f}")
+        if old_data.get('lta_exemption', 0) > 0: deds.append(f"LTA Exemption (Sec 10): Rs. {old_data['lta_exemption']:,.0f}")
+        if old_data.get('professional_tax', 0) > 0: deds.append(f"Professional Tax (Sec 16): Rs. {old_data['professional_tax']:,.0f}")
+        if old_data.get('home_loan_loss_setoff', 0) < 0: deds.append(f"Home Loan Set-Off (Sec 24b): Rs. {abs(old_data['home_loan_loss_setoff']):,.0f}")
+        if old_data.get('80tta_ttb_deduction', 0) > 0: deds.append(f"Savings Interest (Sec 80TTA/TTB): Rs. {old_data['80tta_ttb_deduction']:,.0f}")
+        
+        total_chap_via = old_data.get('total_deductions', 0) - old_data.get('80tta_ttb_deduction', 0)
+        if total_chap_via > 0: deds.append(f"Chapter VI-A Claims (80C, 80D, 80G, NPS): Rs. {total_chap_via:,.0f}")
+
+        if not deds:
+            p.drawString(50, y, "• No structural exemptions or deductions claimed.")
+            y -= 20
+        else:
+            for ded in deds:
+                p.drawString(50, y, f"• {ded}")
+                y -= 20
+
+        y -= 20
+
+        # B. Slab-by-Slab Calculation Table
+        # Check page bounds again before drawing the table
+        if y < 200:
+            p.showPage()
+            y = draw_watermark_and_header(p)
+
+        p.setFillColor(colors.HexColor("#0a2540"))
+        p.setFont(font_bold, 14)
+        p.drawString(40, y, f"Mathematical Tax Breakdown (Optimal: {best_regime})")
+        y -= 20
+
+        slab_data = [["Income Bracket", "Tax Rate", "Calculated Liability"]]
+        target_data = new_data if best_regime == "New Regime" else old_data
+        
+        for slab in target_data['breakdown']:
+            slab_data.append([slab['range'], slab['rate'], f"Rs. {slab['tax']:,.0f}"])
+
+        # Add Surcharge, Rebate, and Cess to the table to make it comprehensive
+        if target_data.get('rebate', 0) > 0:
+            slab_data.append(["Sec 87A Mitigation (Rebate)", "Fixed", f"- Rs. {target_data['rebate']:,.0f}"])
+        if target_data.get('surcharge', 0) > 0:
+            slab_data.append(["HNI Surcharge Applied", "Scaled", f"+ Rs. {target_data['surcharge']:,.0f}"])
+        
+        slab_data.append(["Health & Education Cess", "4%", f"+ Rs. {target_data['cess']:,.0f}"])
+        slab_data.append(["Total Bracket Liability", "NET", f"Rs. {target_data['final_tax']:,.0f}"])
+
+        slab_table = Table(slab_data, colWidths=[200, 150, 150])
+        slab_table.setStyle(TableStyle([
+            ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#635bff')),
+            ('TEXTCOLOR', (0,0), (-1,0), colors.white),
+            ('FONTNAME', (0,0), (-1,0), font_bold),
+            ('FONTSIZE', (0,0), (-1,0), 10),
+            ('ALIGN', (1,0), (-1,-1), 'RIGHT'),
+            ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#dfe6e9')),
+            ('FONTNAME', (0,1), (-1,-1), font_base),
+            ('FONTSIZE', (0,1), (-1,-1), 10),
+            ('PADDING', (0,0), (-1,-1), 8),
+            # Bold the bottom row
+            ('FONTNAME', (0,-1), (-1,-1), font_bold),
+            ('BACKGROUND', (0,-1), (-1,-1), colors.HexColor('#f4f9ff')),
+            ('TEXTCOLOR', (0,-1), (-1,-1), colors.HexColor('#0a2540')),
+        ]))
+        
+        slab_table.wrapOn(p, width, height)
+        slab_table.drawOn(p, 40, y - slab_table._height)
+        y -= (slab_table._height + 30)
+
+    # --- 5. Footer Disclaimer (Printed on every final page) ---
     p.setFont(font_base, 8)
     p.setFillColor(colors.HexColor("#a0aec0"))
     p.drawString(40, 40, "DISCLAIMER: This document is an algorithmic projection and does not constitute legally binding tax advice.")
