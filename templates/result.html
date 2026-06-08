@@ -6,8 +6,8 @@
     <title>Tax Analytics Dashboard</title>
     <style>
         :root {
-            --primary: #0a2540;
-            --accent: #635bff;
+            --primary: #184c54; /* TaxMojo Deep Teal */
+            --accent: #c79b63;  /* TaxMojo Gold */
             --success: #00d4b2;
             --success-bg: #e6f9f6;
             --danger: #ff5c75;
@@ -19,6 +19,11 @@
             --text-main: #2d3142;
             --text-muted: #697386;
         }
+        
+        /* Add this new class for the navbar */
+        .saas-navbar { background: var(--primary); padding: 12px 24px; display: flex; align-items: center; border-bottom: 3px solid var(--accent); }
+        .saas-navbar img { height: 40px; cursor: pointer; transition: transform 0.2s; }
+        .saas-navbar img:hover { transform: scale(1.05); }
 
         body { 
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
@@ -201,6 +206,16 @@
 </head>
 <body>
 
+<body>
+
+<!-- New TaxMojo Navbar -->
+<div class="saas-navbar">
+    <a href="/"><img src="/static/logo.png" alt="TaxMojo"></a>
+</div>
+
+<div class="dashboard-container">
+<!-- ... rest of your code ... -->
+    
 <div class="dashboard-container">
     
     <!-- Hero Header Component -->
