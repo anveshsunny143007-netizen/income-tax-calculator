@@ -358,126 +358,135 @@ def calculate_old_regime(salary, business, rental, interest, dividend, foreign, 
 def generate_tax_pdf(income, income_breakdown, year, comparison, new_data, old_data, report_type):
     buffer = io.BytesIO()
     p = canvas.Canvas(buffer, pagesize=A4)
+    width, height = A4
+
+    # Font Handling (Use Helvetica-Bold for headers if DejaVu lacks a bold file)
     try:
         pdfmetrics.registerFont(TTFont("DejaVu", "DejaVuSans.ttf"))
-        font_name = "DejaVu"
+        font_base = "DejaVu"
+        font_bold = "DejaVu" 
     except:
-        font_name = "Helvetica"
-    width, height = A4
-    
+        font_base = "Helvetica"
+        font_bold = "Helvetica-Bold"
+
+    # --- 1. Background Watermark ---
     p.saveState()
-    p.setFont(font_name, 60)
-    p.setFillGray(0.95, 0.5)
+    p.setFont(font_bold, 70)
+    p.setFillGray(0.96)
     p.translate(width/2, height/2)
     p.rotate(45)
-    p.drawCentredString(0, 0, "TAX ADVISORY REPORT")
+    p.drawCentredString(0, 0, "CONFIDENTIAL REPORT")
     p.restoreState()
+
+    # --- 2. Corporate Top Banner ---
+    p.setFillColor(colors.HexColor("#0a2540")) # Deep Navy
+    p.rect(0, height - 90, width, 90, fill=1, stroke=0)
     
-    y = height - 50
-    p.setFont(font_name, 24)
-    p.setFillColorRGB(0.1, 0.2, 0.5)
-    p.drawString(50, y, "Comprehensive Tax Advisory Report")
-    
-    y -= 30
-    p.setFont(font_name, 10)
-    p.setFillColorRGB(0.3, 0.3, 0.3)
-    p.drawString(50, y, f"Generated on: {datetime.now().strftime('%d %b %Y, %H:%M %p')}")
-    
-    y -= 40
-    p.setFont(font_name, 16)
-    p.setFillColorRGB(0, 0, 0)
-    p.drawString(50, y, "Income Overview")
-    y -= 25
-    p.setFont(font_name, 12)
-    p.drawString(60, y, f"Financial Year: FY {year}")
-    y -= 20
-    p.drawString(60, y, f"Total Gross Income: Rs. {income:,.0f}")
-    
-    y -= 40
+    # Attempt to load Logo (graceful fallback if missing)
+    text_start_x = 40
+    try:
+        p.drawImage("logo.png", 40, height - 75, width=60, height=60, preserveAspectRatio=True, mask='auto')
+        text_start_x = 120
+    except:
+        pass # Skip logo if file is missing/moved
+
+    p.setFillColor(colors.white)
+    p.setFont(font_bold, 22)
+    p.drawString(text_start_x, height - 45, "Institutional Tax Advisory")
+    p.setFont(font_base, 11)
+    p.drawString(text_start_x, height - 65, f"Assessment Framework: FY {year}  |  Generated: {datetime.now().strftime('%d %b %Y, %H:%M')}")
+
+    y = height - 130
+
+    # --- 3. Executive Recommendation Box ---
     best_regime = "New Regime" if new_data["final_tax"] < old_data["final_tax"] else "Old Regime"
     savings = abs(new_data["final_tax"] - old_data["final_tax"])
-    
-    p.setStrokeColorRGB(0.1, 0.6, 0.2)
-    p.setFillColorRGB(0.9, 0.95, 0.9)
-    p.roundRect(45, y - 45, width - 90, 60, 10, fill=1, stroke=1)
-    
-    p.setFillColorRGB(0, 0.4, 0)
-    p.setFont(font_name, 14)
-    p.drawString(60, y - 15, f"RECOMMENDATION: {best_regime} is optimal.")
-    p.setFont(font_name, 12)
-    p.drawString(60, y - 35, f"By choosing the {best_regime}, you save Rs. {savings:,.0f} in taxes.")
-    
-    y -= 70
-    p.setFillColorRGB(0, 0, 0)
-    p.setFont(font_name, 14)
-    p.drawString(50, y, "Regime Comparison Summary")
-    y -= 25
-    
-    table_data = [["Metric", "New Regime", "Old Regime"]]
-    table_data.append(["Gross Slab Income", f"Rs. {new_data['gross_slab_income']:,.0f}", f"Rs. {old_data['gross_slab_income']:,.0f}"])
-    table_data.append(["Total Deductions", f"Rs. {new_data['standard_deduction']:,.0f}", f"Rs. {old_data['total_deductions'] + old_data['standard_deduction']:,.0f}"])
-    table_data.append(["Net Taxable Slab", f"Rs. {new_data['slab_income']:,.0f}", f"Rs. {old_data['slab_income']:,.0f}"])
-    table_data.append(["FINAL TAX LIABILITY", f"Rs. {new_data['final_tax']:,.0f}", f"Rs. {old_data['final_tax']:,.0f}"])
 
-    table = Table(table_data, colWidths=[200, 140, 140])
+    p.setFillColor(colors.HexColor("#f4f9ff"))
+    p.setStrokeColor(colors.HexColor("#1976d2"))
+    p.roundRect(40, y - 80, width - 80, 80, 6, fill=1, stroke=1)
+
+    p.setFillColor(colors.HexColor("#0a2540"))
+    p.setFont(font_bold, 15)
+    p.drawString(60, y - 30, f"EXECUTIVE DIRECTIVE: {best_regime.upper()} OPTIMAL")
+
+    p.setFont(font_base, 12)
+    p.setFillColor(colors.HexColor("#4a5568"))
+    p.drawString(60, y - 55, f"Adopting the {best_regime} structural framework mathematically results")
+    p.drawString(60, y - 70, f"in a net legal reduction of tax liability by Rs. {savings:,.0f}.")
+    
+    y -= 120
+
+    # --- 4. Core Metrics Table ---
+    p.setFillColor(colors.HexColor("#0a2540"))
+    p.setFont(font_bold, 14)
+    p.drawString(40, y, "Fiscal Baseline & Regime Comparison")
+    y -= 25
+
+    table_data = [
+        ["Structural Metric", "New Regime Model", "Old Regime Model"],
+        ["Gross Base Income", f"Rs. {new_data['gross_slab_income']:,.0f}", f"Rs. {old_data['gross_slab_income']:,.0f}"],
+        ["Total Allowed Deductions", f"Rs. {new_data['standard_deduction']:,.0f}", f"Rs. {old_data['total_deductions'] + old_data['standard_deduction']:,.0f}"],
+        ["Net Taxable Slab Pool", f"Rs. {new_data['slab_income']:,.0f}", f"Rs. {old_data['slab_income']:,.0f}"],
+        ["FINAL NET LIABILITY", f"Rs. {new_data['final_tax']:,.0f}", f"Rs. {old_data['final_tax']:,.0f}"]
+    ]
+
+    table = Table(table_data, colWidths=[200, 150, 150])
     table.setStyle(TableStyle([
+        # Header Style
         ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#1976d2')),
         ('TEXTCOLOR', (0,0), (-1,0), colors.white),
-        ('ALIGN', (1,0), (-1,-1), 'RIGHT'),
-        ('GRID', (0,0), (-1,-1), 0.5, colors.grey),
-        ('FONTNAME', (0,0), (-1,-1), font_name),
-        ('FONTSIZE', (0,0), (-1,0), 12),
+        ('FONTNAME', (0,0), (-1,0), font_bold),
+        ('FONTSIZE', (0,0), (-1,0), 11),
+        ('BOTTOMPADDING', (0,0), (-1,0), 10),
+        ('TOPPADDING', (0,0), (-1,0), 10),
+        # Body Style
+        ('BACKGROUND', (0,1), (-1,-2), colors.HexColor('#ffffff')),
+        ('TEXTCOLOR', (0,1), (-1,-1), colors.HexColor('#2d3436')),
+        ('FONTNAME', (0,1), (-1,-1), font_base),
+        ('FONTSIZE', (0,1), (-1,-1), 11),
+        ('BOTTOMPADDING', (0,1), (-1,-1), 8),
+        ('TOPPADDING', (0,1), (-1,-1), 8),
+        # Alternating row color
+        ('BACKGROUND', (0,2), (-1,2), colors.HexColor('#f8f9fa')),
+        # Footer / Final Liability Row
         ('BACKGROUND', (0,-1), (-1,-1), colors.HexColor('#e3f2fd')),
-        ('FONTNAME', (0,-1), (-1,-1), font_name + '-Bold') if font_name == 'Helvetica' else ('FONTNAME', (0,-1), (-1,-1), font_name)
+        ('FONTNAME', (0,-1), (-1,-1), font_bold),
+        ('TEXTCOLOR', (0,-1), (-1,-1), colors.HexColor('#0a2540')),
+        # Borders & Alignment
+        ('ALIGN', (1,0), (-1,-1), 'RIGHT'),
+        ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#dfe6e9')),
     ]))
     
     table_width, table_height = table.wrap(0, 0)
-    table.drawOn(p, 50, y - table_height)
+    table.drawOn(p, 40, y - table_height)
     y = y - table_height - 40
-    
+
+    # --- 5. Special Capital Assets ---
     if income_breakdown.get('STCG', 0) > 0 or income_breakdown.get('LTCG', 0) > 0 or income_breakdown.get('Crypto (VDA)', 0) > 0:
-        p.setFont(font_name, 14)
-        p.drawString(50, y, "Capital Gains & Special Rates Breakdown")
-        y -= 20
-        p.setFont(font_name, 11)
-        if income_breakdown.get('STCG', 0) > 0:
-            p.drawString(60, y, f"Short Term Capital Gains (STCG): Rs. {income_breakdown['STCG']:,.0f} (Tax: Rs. {new_data['stcg_tax']:,.0f})")
-            y -= 18
-        if income_breakdown.get('LTCG', 0) > 0:
-            p.drawString(60, y, f"Long Term Capital Gains (LTCG): Rs. {income_breakdown['LTCG']:,.0f} (Tax: Rs. {new_data['ltcg_tax']:,.0f})")
-            y -= 18
-        if income_breakdown.get('Crypto (VDA)', 0) > 0:
-            p.drawString(60, y, f"Virtual Digital Assets (Crypto): Rs. {income_breakdown['Crypto (VDA)']:,.0f} (Tax: Rs. {new_data['crypto_tax']:,.0f})")
-            y -= 25
-
-    if report_type == "detailed" and y > 200:
-        p.setFont(font_name, 14)
-        p.drawString(50, y, "Old Regime Deduction Breakdown")
-        y -= 20
-        p.setFont(font_name, 11)
+        p.setFillColor(colors.HexColor("#0a2540"))
+        p.setFont(font_bold, 14)
+        p.drawString(40, y, "Special Rate Capital Assets (Sec 111A/112A/115BBH)")
+        y -= 25
         
-        if old_data.get('hra_exemption', 0) > 0:
-            p.drawString(60, y, f"HRA Exemption: Rs. {old_data['hra_exemption']:,.0f}")
-            y -= 18
-        if old_data.get('lta_exemption', 0) > 0:
-            p.drawString(60, y, f"LTA Exemption: Rs. {old_data['lta_exemption']:,.0f}")
-            y -= 18
-        if old_data.get('professional_tax', 0) > 0:
-            p.drawString(60, y, f"Professional Tax: Rs. {old_data['professional_tax']:,.0f}")
-            y -= 18
-        if old_data.get('home_loan_loss_setoff', 0) < 0:
-            p.drawString(60, y, f"Home Loan Sec 24(b) Offset: Rs. {abs(old_data['home_loan_loss_setoff']):,.0f}")
-            y -= 18
-        if old_data.get('80tta_ttb_deduction', 0) > 0:
-            p.drawString(60, y, f"Interest Deduction (80TTA/TTB): Rs. {old_data['80tta_ttb_deduction']:,.0f}")
-            y -= 18
-        if old_data.get('deduction_80g', 0) > 0:
-            p.drawString(60, y, f"Donations 80G Deducted: Rs. {old_data['deduction_80g']:,.0f}")
-            y -= 18
+        p.setFont(font_base, 11)
+        p.setFillColor(colors.HexColor("#4a5568"))
+        if income_breakdown.get('STCG', 0) > 0:
+            p.drawString(50, y, f"• Short Term Capital Gains: Rs. {income_breakdown['STCG']:,.0f} (Calculated Tax: Rs. {new_data['stcg_tax']:,.0f})")
+            y -= 20
+        if income_breakdown.get('LTCG', 0) > 0:
+            p.drawString(50, y, f"• Long Term Capital Gains: Rs. {income_breakdown['LTCG']:,.0f} (Calculated Tax: Rs. {new_data['ltcg_tax']:,.0f})")
+            y -= 20
+        if income_breakdown.get('Crypto (VDA)', 0) > 0:
+            p.drawString(50, y, f"• Virtual Digital Assets: Rs. {income_breakdown['Crypto (VDA)']:,.0f} (Calculated Tax: Rs. {new_data['crypto_tax']:,.0f})")
+            y -= 30
 
-    p.setFont(font_name, 9)
-    p.setFillColorRGB(0.5, 0.5, 0.5)
-    p.drawString(50, 40, "Disclaimer: This is an estimated report. Please verify with official Income Tax rules before filing.")
+    # --- 6. Footer Disclaimer ---
+    p.setFont(font_base, 8)
+    p.setFillColor(colors.HexColor("#a0aec0"))
+    p.drawString(40, 40, "DISCLAIMER: This document is an algorithmic projection and does not constitute legally binding tax advice.")
+    p.drawString(40, 30, "Please consult a registered Chartered Accountant before filing official returns with the Income Tax Department.")
+    
     p.showPage()
     p.save()
     buffer.seek(0)
