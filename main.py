@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse, StreamingResponse
 from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles  # <--- ADD THIS NEW IMPORT
 import json
 import io
 from datetime import datetime
@@ -14,6 +15,10 @@ from reportlab.lib import colors
 import math
 
 app = FastAPI()
+
+# --- ADD THIS NEW LINE right below app = FastAPI() ---
+app.mount("/static", StaticFiles(directory="."), name="static")
+
 templates = Jinja2Templates(directory="templates")
 
 with open("taxdata.json") as f:
