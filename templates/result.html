@@ -172,7 +172,7 @@
     <div class="grid-2">
         
         <!-- New Regime Profile -->
-        <div class="dash-card" style="border-top: 4px solid var(--accent);">
+        <div class="dash-card" style="border-top: 4px solid var(--primary);">
             <div class="card-header">
                 <h3>New Regime Assessment</h3>
                 <span class="badge badge-success">Simplified Code</span>
@@ -239,7 +239,7 @@
         </div>
 
         <!-- Old Regime Profile -->
-        <div class="dash-card" style="border-top: 4px solid var(--text-muted);">
+        <div class="dash-card" style="border-top: 4px solid var(--accent);">
             <div class="card-header">
                 <h3>Old Regime Assessment</h3>
                 <span class="badge badge-warning">Exemption Intensive</span>
@@ -494,8 +494,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 {
                     label: 'New Regime Profile',
                     data: newData,
-                    borderColor: '#635bff',
-                    backgroundColor: 'rgba(99, 91, 255, 0.04)',
+                    borderColor: '#184c54', /* Deep Teal */
+                    backgroundColor: 'rgba(24, 76, 84, 0.05)',
                     borderWidth: 2.5,
                     fill: true,
                     tension: 0.15,
@@ -504,7 +504,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 {
                     label: 'Old Regime Profile',
                     data: oldData,
-                    borderColor: '#a3aed0',
+                    borderColor: '#c79b63', /* Gold */
                     backgroundColor: 'transparent',
                     borderWidth: 2,
                     borderDash: [5, 5],
