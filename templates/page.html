@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} | TaxMojo</title>
+    <style>
+        :root {
+            --primary: #184c54; 
+            --accent: #c79b63;  
+            --gray-light: #f8f9fa;
+            --text-main: #2d3142;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background-color: #f7f9fc; margin: 0; padding: 0; color: var(--text-main); }
+        
+        .saas-navbar { background: white; padding: 10px 24px; display: flex; justify-content: center; align-items: center; border-bottom: 3px solid var(--accent); box-shadow: 0 4px 15px rgba(0,0,0,0.04); }
+        .saas-navbar img { height: 75px; cursor: pointer; transition: 0.2s; }
+        .saas-navbar img:hover { transform: scale(1.03); }
+
+        .content-container { max-width: 800px; margin: 60px auto; background: white; padding: 50px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #eef2f5; text-align: center; }
+        h1 { color: var(--primary); font-size: 32px; margin-bottom: 15px; }
+        p { color: #697386; font-size: 16px; line-height: 1.6; }
+        
+        .badge { display: inline-block; background: #fff8ec; color: #b07000; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: bold; border: 1px solid #c79b63; margin-bottom: 20px; }
+        .btn-primary { background: var(--primary); color: white; padding: 14px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; margin-top: 30px; transition: 0.2s; }
+        .btn-primary:hover { background: #123a40; }
+    </style>
+</head>
+<body>
+
+<div class="saas-navbar">
+    <a href="/"><img src="/static/logo.png" alt="TaxMojo"></a>
+</div>
+
+<div class="content-container">
+    {% if page_type == 'tool' %}
+        <span class="badge">PRO FEATURE IN BETA</span>
+        <h1>{{ title }}</h1>
+        <p>This institutional-grade market tool is currently undergoing rigorous beta testing with our closed network of Chartered Accountants and proprietary traders.</p>
+        <p>To ensure absolute data accuracy and seamless execution, public access has been temporarily restricted. The full suite will be unlocked in our upcoming v2.0 release.</p>
+        <a href="/" class="btn-primary">← Return to Tax Calculator</a>
+    
+    {% elif page_type == 'legal' %}
+        <span class="badge">LEGAL & ADVISORY</span>
+        <h1>{{ title }}</h1>
+        <p style="text-align: left;">This documentation outlines the regulatory framework, usage policies, and structural guidelines for engaging with the TaxMojo calculation engine. We prioritize complete transparency and data security for all our users.</p>
+        <p style="text-align: left; margin-top: 30px; padding: 20px; background: var(--gray-light); border-radius: 8px;"><em>[Detailed legal documentation and institutional guidelines for {{ title }} will be populated here shortly.]</em></p>
+        <a href="/" class="btn-primary">← Return to Dashboard</a>
+    {% endif %}
+</div>
+
+</body>
+</html>
