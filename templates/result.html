@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tax Analytics Dashboard</title>
+    <title>Tax Analytics Dashboard | TaxMojo</title>
     <style>
         :root {
             --primary: #184c54; /* TaxMojo Deep Teal */
@@ -22,9 +22,15 @@
             --text-muted: #697386;
         }
 
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background-color: #f7f9fc; margin: 0; padding: 0; color: var(--text-main); line-height: 1.5; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            background-color: #f7f9fc; 
+            margin: 0; 
+            padding: 0; 
+            color: var(--text-main); 
+            line-height: 1.5; 
+        }
         
-        /* White Navbar with Gold Accent Border */
         /* White Navbar with Gold Accent Border */
         .saas-navbar { 
             background: white; 
@@ -33,11 +39,11 @@
             justify-content: center; 
             align-items: center; 
             border-bottom: 3px solid var(--accent); 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.04); /* Softer, wider premium shadow */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04); 
         }
         
         .saas-navbar img { 
-            height: 75px; /* Increased significantly to compensate for image padding */ 
+            height: 75px; 
             cursor: pointer; 
             transition: transform 0.2s; 
         }
@@ -48,10 +54,11 @@
 
         /* The Tighter, Focused Container */
         .dashboard-container { 
-            max-width: 1040px; /* Reduced from 1200px to fix the 'too wide' feeling */ 
+            max-width: 1040px; 
             margin: 40px auto; 
             padding: 0 20px; 
         }
+        
         .dash-card { background: white; border-radius: 12px; border: 1px solid var(--gray-border); box-shadow: 0 4px 6px rgba(50,50,93,0.02); margin-bottom: 24px; overflow: hidden; }
         .card-header { padding: 20px 24px; border-bottom: 1px solid var(--gray-border); background: #fff; display: flex; justify-content: space-between; align-items: center; }
         .card-header h3 { margin: 0; font-size: 18px; font-weight: 600; color: var(--primary); }
@@ -86,11 +93,8 @@
             gap: 24px; 
             align-items: start; 
         }
+        @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
 
-        /* Only stack them if the user is on a mobile phone */
-        @media (max-width: 900px) { 
-            .grid-2 { grid-template-columns: 1fr; } 
-        }
         .roadmap-list { list-style: none; padding: 0; margin: 0; }
         .roadmap-item { background: var(--gray-light); padding: 16px; border-radius: 8px; margin-bottom: 12px; display: flex; align-items: center; border: 1px solid var(--gray-border); font-weight: 500; }
         .roadmap-item::before { content: '🎯'; margin-right: 12px; font-size: 18px; }
@@ -103,7 +107,6 @@
         .btn-secondary { display: inline-block; padding: 10px 24px; background: white; border: 1px solid var(--gray-border); text-decoration: none; color: var(--text-main); border-radius: 6px; font-weight: 500; transition: 0.2s; }
         .btn-secondary:hover { background: var(--gray-light); border-color: #cbd5e1; }
         
-        /* Gold Button with Teal Text for High Contrast Premium Feel */
         .btn-primary { background: var(--accent); color: var(--primary); padding: 14px 24px; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 15px; }
         .btn-primary:hover { background: var(--accent-hover); }
 
@@ -115,16 +118,11 @@
 </head>
 <body>
 
-<body>
-
 <!-- New TaxMojo Navbar -->
 <div class="saas-navbar">
     <a href="/"><img src="/static/logo.png" alt="TaxMojo"></a>
 </div>
 
-<div class="dashboard-container">
-<!-- ... rest of your code ... -->
-    
 <div class="dashboard-container">
     
     <!-- Hero Header Component -->
@@ -250,7 +248,6 @@
                     {% if new_data.marginal_relief_87a > 0 %}
                         <div><span class="relief-badge">87A Marginal Boundary Limit Engaged</span></div>
                     {% endif %}
-                </div >
                 {% endif %}
 
                 {% if new_data.net_surcharge > 0 %}
@@ -472,7 +469,6 @@
         </div>
         <div class="dash-card" style="margin-bottom: 0; padding: 24px; display: flex; flex-direction: column; justify-content: center; background: #fafafa;">
             <form method="post" action="/download-pdf" style="margin: 0;">
-                <!-- Hidden attributes matching state -->
                 <input type="hidden" name="salary_income" value="{{ salary_income }}">
                 <input type="hidden" name="business_income" value="{{ business_income }}">
                 <input type="hidden" name="rental_income" value="{{ rental_income }}">
@@ -520,22 +516,22 @@ document.addEventListener("DOMContentLoaded", function() {
     const oldData = {{ old_taxes | safe }};
     
     new Chart(ctx, {
-        type: 'bar', // Upgraded to a Bar Chart
+        type: 'bar',
         data: {
             labels: labels,
             datasets: [
                 {
                     label: 'New Regime Tax',
                     data: newData,
-                    backgroundColor: '#184c54', /* TaxMojo Teal */
-                    borderRadius: 6, /* Modern rounded corners */
+                    backgroundColor: '#184c54',
+                    borderRadius: 6,
                     barPercentage: 0.7,
                     categoryPercentage: 0.8
                 },
                 {
                     label: 'Old Regime Tax',
                     data: oldData,
-                    backgroundColor: '#c79b63', /* TaxMojo Gold */
+                    backgroundColor: '#c79b63',
                     borderRadius: 6,
                     barPercentage: 0.7,
                     categoryPercentage: 0.8
@@ -565,7 +561,7 @@ document.addEventListener("DOMContentLoaded", function() {
             },
             scales: {
                 y: {
-                    grid: { color: '#eef2f5', borderDash: [4, 4] }, /* Clean dashed grid lines */
+                    grid: { color: '#eef2f5', borderDash: [4, 4] },
                     ticks: { 
                         callback: function(value) { 
                             if(value >= 100000) return '₹' + (value/100000).toFixed(2) + 'L'; 
@@ -583,6 +579,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
     });
+});
 
 const salary_income = {{ salary_income }};
 const business_income = {{ business_income }};
