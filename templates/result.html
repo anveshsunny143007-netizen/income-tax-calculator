@@ -7,200 +7,76 @@
     <style>
         :root {
             --primary: #184c54; /* TaxMojo Deep Teal */
+            --primary-hover: #123a40;
             --accent: #c79b63;  /* TaxMojo Gold */
-            --success: #00d4b2;
+            --accent-hover: #b38855;
+            --success: #008771;
             --success-bg: #e6f9f6;
-            --danger: #ff5c75;
+            --danger: #c3273e;
             --danger-bg: #fff0f2;
-            --warning: #f5a623;
+            --warning: #b07000;
             --warning-bg: #fff8ec;
             --gray-light: #f8f9fa;
             --gray-border: #eef2f5;
             --text-main: #2d3142;
             --text-muted: #697386;
         }
+
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background-color: #f7f9fc; margin: 0; padding: 0; color: var(--text-main); line-height: 1.5; }
         
-        /* Add this new class for the navbar */
-        .saas-navbar { background: var(--primary); padding: 12px 24px; display: flex; align-items: center; border-bottom: 3px solid var(--accent); }
-        .saas-navbar img { height: 40px; cursor: pointer; transition: transform 0.2s; }
+        /* White Navbar with Gold Accent Border */
+        .saas-navbar { background: white; padding: 15px 24px; display: flex; justify-content: center; align-items: center; border-bottom: 4px solid var(--accent); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .saas-navbar img { height: 50px; cursor: pointer; transition: transform 0.2s; }
         .saas-navbar img:hover { transform: scale(1.05); }
 
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            background-color: #f7f9fc; 
-            margin: 0; 
-            padding: 0; 
-            color: var(--text-main);
-            line-height: 1.5;
-        }
+        .dashboard-container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        .dash-card { background: white; border-radius: 12px; border: 1px solid var(--gray-border); box-shadow: 0 4px 6px rgba(50,50,93,0.02); margin-bottom: 24px; overflow: hidden; }
+        .card-header { padding: 20px 24px; border-bottom: 1px solid var(--gray-border); background: #fff; display: flex; justify-content: space-between; align-items: center; }
+        .card-header h3 { margin: 0; font-size: 18px; font-weight: 600; color: var(--primary); }
+        .card-body { padding: 24px; }
 
-        .dashboard-container { 
-            max-width: 1200px; 
-            margin: 40px auto; 
-            padding: 0 20px;
-        }
+        .hero-panel { display: grid; grid-template-columns: 1fr 1fr; background: var(--primary); color: white; border-radius: 12px; margin-bottom: 24px; }
+        .hero-side { padding: 32px; }
+        .hero-divider { border-left: 1px solid rgba(255,255,255,0.1); }
 
-        /* Card Layouts */
-        .dash-card { 
-            background: white; 
-            border-radius: 12px; 
-            border: 1px solid var(--gray-border);
-            box-shadow: 0 4px 6px rgba(50,50,93,0.02), 0 1px 3px rgba(0,0,0,0.02);
-            margin-bottom: 24px;
-            overflow: hidden;
-        }
-
-        .card-header {
-            padding: 20px 24px;
-            border-bottom: 1px solid var(--gray-border);
-            background: #fff;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .card-header h3 {
-            margin: 0;
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--primary);
-        }
-
-        .card-body {
-            padding: 24px;
-        }
-
-        /* Hero Split Panel */
-        .hero-panel {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            background: var(--primary);
-            color: white;
-            border-radius: 12px;
-            margin-bottom: 24px;
-        }
-
-        .hero-side {
-            padding: 32px;
-        }
-
-        .hero-divider {
-            border-left: 1px solid rgba(255,255,255,0.1);
-        }
-
-        /* Typography & Badges */
         .text-big { font-size: 28px; font-weight: 700; margin: 8px 0; }
         .text-muted { color: var(--text-muted); font-size: 14px; }
         
-        .badge {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .badge-success { background: var(--success-bg); color: #008771; }
-        .badge-danger { background: var(--danger-bg); color: #c3273e; }
-        .badge-warning { background: var(--warning-bg); color: #b07000; }
+        .badge { display: inline-block; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .badge-success { background: var(--success-bg); color: var(--success); }
+        .badge-danger { background: var(--danger-bg); color: var(--danger); }
+        .badge-warning { background: var(--warning-bg); color: var(--warning); }
+        .income-pill { background: var(--gray-light); padding: 6px 14px; border-radius: 8px; font-size: 13px; margin-right: 8px; display: inline-block; margin-bottom: 8px; color: var(--primary); border: 1px solid var(--gray-border); font-weight: 500; }
 
-        .income-pill { 
-            background: var(--gray-light); 
-            padding: 6px 14px; 
-            border-radius: 8px; 
-            font-size: 13px; 
-            margin-right: 8px; 
-            display: inline-block; 
-            margin-bottom: 8px; 
-            color: var(--primary); 
-            border: 1px solid var(--gray-border);
-            font-weight: 500;
-        }
-
-        /* Interactive Tables */
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            text-align: left;
-        }
-        
-        th { 
-            padding: 14px 16px; 
-            font-size: 13px; 
-            text-transform: uppercase; 
-            letter-spacing: 0.5px; 
-            color: var(--text-muted);
-            border-bottom: 2px solid var(--gray-border);
-            font-weight: 600;
-        }
-        
-        td { 
-            padding: 14px 16px; 
-            font-size: 14px; 
-            border-bottom: 1px solid var(--gray-border);
-        }
-
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { padding: 14px 16px; font-size: 13px; text-transform: uppercase; color: var(--text-muted); border-bottom: 2px solid var(--gray-border); font-weight: 600; }
+        td { padding: 14px 16px; font-size: 14px; border-bottom: 1px solid var(--gray-border); }
         tr:hover td { background-color: var(--gray-light); }
-
+        
         .slab-table { margin-top: 15px; }
         .slab-table th { background: var(--gray-light); padding: 8px 12px; font-size: 11px; }
         .slab-table td { padding: 8px 12px; font-size: 13px; }
 
-        /* Grid Layouts */
-        .grid-2 { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(48%, 1fr)); 
-            gap: 24px; 
-        }
-
-        /* Strategic Advisory Components */
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(48%, 1fr)); gap: 24px; }
         .roadmap-list { list-style: none; padding: 0; margin: 0; }
-        .roadmap-item { 
-            background: var(--gray-light); 
-            padding: 16px; 
-            border-radius: 8px; 
-            margin-bottom: 12px; 
-            display: flex; 
-            align-items: center;
-            border: 1px solid var(--gray-border);
-            font-weight: 500;
-        }
+        .roadmap-item { background: var(--gray-light); padding: 16px; border-radius: 8px; margin-bottom: 12px; display: flex; align-items: center; border: 1px solid var(--gray-border); font-weight: 500; }
         .roadmap-item::before { content: '🎯'; margin-right: 12px; font-size: 18px; }
 
-        /* Optimization Slider Styling */
         .slider-group { margin-bottom: 20px; }
         .slider-label-row { display: flex; justify-content: space-between; font-weight: 600; font-size: 14px; }
-        input[type=range] { 
-            width: 100%; 
-            height: 6px; 
-            background: var(--gray-border); 
-            border-radius: 5px; 
-            outline: none; 
-            margin: 12px 0;
-            -webkit-appearance: none;
-        }
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: var(--accent);
-            cursor: pointer;
-        }
+        input[type=range] { width: 100%; height: 6px; background: var(--gray-border); border-radius: 5px; outline: none; margin: 12px 0; -webkit-appearance: none; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--accent); cursor: pointer; }
 
-        /* Action Buttons */
         .btn-secondary { display: inline-block; padding: 10px 24px; background: white; border: 1px solid var(--gray-border); text-decoration: none; color: var(--text-main); border-radius: 6px; font-weight: 500; transition: 0.2s; }
         .btn-secondary:hover { background: var(--gray-light); border-color: #cbd5e1; }
-        .btn-primary { background: var(--accent); color: white; padding: 12px 24px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        .btn-primary:hover { background: #544dc9; }
+        
+        /* Gold Button with Teal Text for High Contrast Premium Feel */
+        .btn-primary { background: var(--accent); color: var(--primary); padding: 14px 24px; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 15px; }
+        .btn-primary:hover { background: var(--accent-hover); }
 
         .relief-badge { display: inline-block; background: #e0f2fe; color: #0369a1; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; margin-top: 5px; }
 
-        @media (max-width: 900px) { 
-            .hero-panel { grid-template-columns: 1fr; } 
-            .hero-divider { border-left: none; border-top: 1px solid rgba(255,255,255,0.1); }
-        }
+        @media (max-width: 900px) { .hero-panel { grid-template-columns: 1fr; } .hero-divider { border-left: none; border-top: 1px solid rgba(255,255,255,0.1); } }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
