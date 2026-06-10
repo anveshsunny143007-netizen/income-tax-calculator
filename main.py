@@ -865,3 +865,39 @@ def optimize_tax(
     selected_tax_data = all_tax_data[year]
     optimized_old = calculate_old_regime(salary_income, business_income, rental_income, interest_income, dividend_income, foreign_income, other_income_val, stcg_income, ltcg_income, crypto_income, deduction_80c, deduction_80d, nps_80ccd1b, deduction_80e, deduction_80g_100, deduction_80g_50, other_deductions, home_loan_interest, basic_salary, hra_received, rent_paid, is_metro, professional_tax, lta_exemption, 0, selected_tax_data, age_group)
     return {"optimized_tax": optimized_old["final_tax"]}
+
+# ==========================================
+# MULTI-PAGE ROUTING (MEGA FOOTER LINKS)
+# ==========================================
+
+@app.get("/tools/{tool_id}", response_class=HTMLResponse)
+async def tool_pages(request: Request, tool_id: str):
+    # Dictionary of our advanced tools
+    tools = {
+        "heatmaps": "Nifty 500 Heatmaps",
+        "breakout": "Momentum Breakout Scans",
+        "volume": "Volume Shocker Alerts",
+        "swing": "Swing Trading Setups",
+        "options": "Live Option Analytics",
+        "nifty-etf": "Nifty 50 Index Fund Tracker",
+        "gold-etf": "Gold Trackers (Gold BeES)",
+        "bank-etf": "Bank Nifty ETFs",
+        "liquid-etf": "Liquid Cash ETFs",
+        "sector-etf": "Sectoral Momentum"
+    }
+    title = tools.get(tool_id, "Advanced Market Tool")
+    return templates.TemplateResponse("page.html", {"request": request, "title": title, "page_type": "tool"})
+
+
+@app.get("/legal/{page_id}", response_class=HTMLResponse)
+async def legal_pages(request: Request, page_id: str):
+    # Dictionary of our guides and legal docs
+    docs = {
+        "80c-guide": "Section 80C Investment Guide",
+        "crypto-tax": "Crypto Tax Rules (Sec 115BBH)",
+        "terms": "Terms of Service",
+        "privacy": "Privacy Policy",
+        "contact": "Contact Advisory Team"
+    }
+    title = docs.get(page_id, "TaxMojo Resource")
+    return templates.TemplateResponse("page.html", {"request": request, "title": title, "page_type": "legal"})
