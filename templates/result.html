@@ -128,7 +128,7 @@
     <!-- Hero Header Component -->
     <div class="hero-panel">
         <div class="hero-side">
-            <span class="text-muted" style="color: rgba(255,255,255,0.7)">COMPREHENSIVE ANALYSIS</span>
+            <span class="text-muted" style="color: rgba(255,255,255,0.7)">YOUR TAX REPORT</span>
             <div class="text-big">FY {{ year }} Taxation Summary</div>
             <div style="margin-top: 15px;">
                 {% for source, amount in income_breakdown.items() %}
@@ -137,7 +137,7 @@
             </div>
         </div>
         <div class="hero-side hero-divider" style="background: rgba(255,255,255,0.02);">
-            <span class="text-muted" style="color: rgba(255,255,255,0.7)">OPTIMAL ENGINE STRATEGY</span>
+            <span class="text-muted" style="color: rgba(255,255,255,0.7)">OUR RECOMMENDATION</span>
             <div class="text-big" style="color: var(--success)">{{ better }} Recommended</div>
             <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">
                 Choosing this path yields a direct legal saving of <strong>Sub-Total: ₹{{ "{:,.0f}".format(tax_difference) }}</strong> over the alternative structure.
@@ -164,7 +164,7 @@
     <!-- Global Timeline Chart Component -->
     <div class="dash-card">
         <div class="card-header">
-            <h3>📈 Multi-Year Regime Trajectory</h3>
+            <h3>📈 Future Tax Projection</h3>
         </div>
         <div class="card-body">
             <canvas id="taxTrendChart" height="80"></canvas>
@@ -174,7 +174,7 @@
     <!-- Comparative Table Panel -->
     <div class="dash-card">
         <div class="card-header">
-            <h3>📅 Cross-Regime Timeline Matrix</h3>
+            <h3>📅 Year-by-Year Comparison</h3>
         </div>
         <div class="card-body" style="padding: 0;">
             <table>
@@ -213,7 +213,7 @@
                 {% if new_data.taxable_rental < income_breakdown['Rental'] %}
                 <p class="text-muted">Rental Net Provisioning (Sec 24a): <span style="color: var(--danger)">-₹{{ "{:,.0f}".format(income_breakdown['Rental'] - new_data.taxable_rental) }}</span></p>
                 {% endif %}
-                <p style="font-size: 16px; font-weight: 600; margin: 20px 0 10px 0;">Calculated Base Slab Income: ₹{{ "{:,.0f}".format(new_data.slab_income) }}</p>
+                <p style="font-size: 16px; font-weight: 600; margin: 20px 0 10px 0;">Net Taxable Income: ₹{{ "{:,.0f}".format(new_data.slab_income) }}</p>
                 
                 <table class="slab-table">
                     <thead>
@@ -243,7 +243,7 @@
                 
                 {% if new_data.rebate > 0 or new_data.marginal_relief_87a > 0 %}
                     <div style="display: flex; justify-content: space-between; font-size:14px; color: #008771; margin-bottom: 6px;">
-                        <span>Section 87A Mitigation Allocation:</span><span>-₹{{ "{:,.0f}".format(new_data.rebate) }}</span>
+                        <span>Tax Rebate (Sec 87A):</span><span>-₹{{ "{:,.0f}".format(new_data.rebate) }}</span>
                     </div>
                     {% if new_data.marginal_relief_87a > 0 %}
                         <div><span class="relief-badge">87A Marginal Boundary Limit Engaged</span></div>
@@ -263,7 +263,7 @@
                     <span>Health & Education Cess (4%):</span><span>₹{{ "{:,.0f}".format(new_data.cess) }}</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; font-size:18px; font-weight:700; border-top: 2px dashed var(--gray-border); padding-top:12px;">
-                    <span>Net Valuation:</span><span style="color: var(--accent)">₹{{ "{:,.0f}".format(new_data.final_tax) }}</span>
+                    <span>Final Tax Payable:</span><span style="color: var(--accent)">₹{{ "{:,.0f}".format(new_data.final_tax) }}</span>
                 </div>
             </div>
         </div>
@@ -308,7 +308,7 @@
                 
                 {% if old_data.rebate > 0 %}
                     <div style="display: flex; justify-content: space-between; font-size:14px; color: #008771; margin-bottom: 6px;">
-                        <span>Section 87A Mitigation Allocation:</span><span>-₹{{ "{:,.0f}".format(old_data.rebate) }}</span>
+                        <span>Tax Rebate (Sec 87A):</span><span>-₹{{ "{:,.0f}".format(old_data.rebate) }}</span>
                     </div>
                 {% endif %}
 
@@ -322,14 +322,14 @@
                     <span>Health & Education Cess (4%):</span><span>₹{{ "{:,.0f}".format(old_data.cess) }}</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; font-size:18px; font-weight:700; border-top: 2px dashed var(--gray-border); padding-top:12px;">
-                    <span>Net Valuation:</span><span style="color: var(--primary)">₹{{ "{:,.0f}".format(old_data.final_tax) }}</span>
+                    <span>Final Tax Payable:</span><span style="color: var(--primary)">₹{{ "{:,.0f}".format(old_data.final_tax) }}</span>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Advanced Tax Planning Advisory Suites -->
-    <h2 style="font-size: 20px; font-weight:700; margin: 40px 0 20px 0; color: var(--primary);">🚀 Strategic Optimization Portfolio</h2>
+    <h2 style="font-size: 20px; font-weight:700; margin: 40px 0 20px 0; color: var(--primary);">🚀 Tax Saving Recommendations</h2>
 
     {% if salary_optimization %}
     <div class="dash-card" style="border-left: 6px solid #6f42c1;">
@@ -368,7 +368,7 @@
     {% if roadmap_allocation %}
     <div class="dash-card" style="background: linear-gradient(135deg, #0f172a, #1e293b); color: white;">
         <div class="card-body">
-            <h3 style="color: #f1f5f9; margin-top:0; font-size: 20px;">🗺️ Capital Deployment Map</h3>
+            <h3 style="color: #f1f5f9; margin-top:0; font-size: 20px;">🗺️ Where to Invest for Max Savings</h3>
             <p style="opacity: 0.8;">To force an absolute minimization of the fiscal balance, prioritize deployment targets into these exact asset routes:</p>
             <ul class="roadmap-list" style="margin-top: 20px;">
                 {% for step in roadmap_allocation %}
@@ -407,7 +407,7 @@
     <!-- 5-Year Outlook Modeling -->
     <div class="dash-card">
         <div class="card-header">
-            <h3>🔮 5-Year Compounded Outlook Model</h3>
+            <h3>🔮 5-Year Income & Tax Forecast</h3>
             <span class="text-muted">Assumed Compound Growth: {{ growth_rate }}% YoY</span>
         </div>
         <div class="card-body" style="padding: 0;">
@@ -434,7 +434,7 @@
     <!-- Live Optimization Matrix Engine -->
     <div class="dash-card">
         <div class="card-header">
-            <h3>🎛️ Real-Time Cost Tuning Matrix (Old Regime)</h3>
+            <h3>🎛️ Interactive Deduction Simulator</h3>
         </div>
         <div class="card-body">
             <div class="slider-group">
