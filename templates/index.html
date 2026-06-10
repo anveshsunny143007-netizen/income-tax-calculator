@@ -25,56 +25,59 @@
 	.form-grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 40px; row-gap: 20px; }
 	label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 5px; }
 	input, select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #dfe6e9; font-size: 14px; box-sizing: border-box; }
-	input:focus, select:focus { outline: none; border-color: #1976d2; box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1); }
-	.income-section { grid-column: span 2; background: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #e1e4e8; margin-bottom: 10px; position: relative; }
-	.income-section h4 { margin-top: 0; margin-bottom: 15px; color: #1976d2; font-size: 16px; border-bottom: 2px solid #eef2f7; padding-bottom: 10px; }
-	.live-total { text-align: right; margin-top: 15px; font-size: 18px; font-weight: bold; color: #28a745; }
+	input:focus, select:focus { outline: none; border-color: #184c54; box-shadow: 0 0 0 3px rgba(24, 76, 84, 0.1); }
+	
+    .income-section { grid-column: span 2; background: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #e1e4e8; margin-bottom: 10px; position: relative; }
+	.income-section h4 { margin-top: 0; margin-bottom: 15px; color: #184c54; font-size: 16px; border-bottom: 2px solid #eef2f7; padding-bottom: 10px; }
+	
+    .live-total { text-align: right; margin-top: 15px; font-size: 18px; font-weight: bold; color: #184c54; }
     .live-preview-box { margin-top: 15px; padding-top: 15px; border-top: 1px solid #e1e4e8; text-align: right; font-size: 15px; color: #444; }
 	.full-width { grid-column: span 2; text-align: center; margin-top: 10px; }
-	button { padding: 12px 35px; border-radius: 30px; border: none; font-size: 16px; font-weight: 600; background: #1976d2; color: white; cursor: pointer; transition: 0.3s; }
-	button:hover { background: #0d47a1; }
-    .btn-outline { background: transparent; border: 2px solid #1976d2; color: #1976d2; padding: 8px 15px; font-size: 13px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; width: 100%; margin-top: 10px; }
-    .btn-outline:hover { background: #f0f7ff; }
-	.table-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+	
+    /* Teal Primary Button */
+    button { padding: 15px; width: 100%; border-radius: 8px; border: none; font-size: 16px; font-weight: bold; background: #184c54; color: white; cursor: pointer; transition: 0.3s; margin-top: 20px;}
+	button:hover { background: #123a40; }
+    
+    /* Teal Outline Button */
+    .btn-outline { background: transparent; border: 2px solid #184c54; color: #184c54; padding: 8px 15px; font-size: 13px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; width: 100%; margin-top: 10px; }
+    .btn-outline:hover { background: #e8f0f1; }
+	
+    .table-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 	table { width: 100%; border-collapse: collapse; font-size: 13px; }
-	th { background: #f1f4f9; padding: 10px; text-align: center; }
+	th { background: #f1f4f9; padding: 10px; text-align: center; color: #184c54; }
 	td { padding: 8px; text-align: center; border-bottom: 1px solid #eef2f7; }
-	.info-card { background: transparent; padding: 0; margin-top: 50px; border: none; box-shadow: none; }
-	.info-card h2 { font-size: 24px; margin-bottom: 30px; color: #0a2540; text-align: center; font-weight: 700; }
 	
-    /* Widened the minmax to force a 2-column layout on standard screens */
-    .how-to-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
-	
-    .step-card { background: white; padding: 25px; border-radius: 16px; border: 1px solid #eef2f7; box-shadow: 0 4px 6px rgba(0,0,0,0.02); transition: all 0.3s ease; position: relative; overflow: hidden; }
-	.step-card:hover { transform: translateY(-5px); box-shadow: 0 12px 24px rgba(25, 118, 210, 0.08); border-color: #cce0f5; }
-	.step-badge { background: #f0f7ff; color: #1976d2; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; margin-bottom: 16px; }
-	.step-title { font-size: 16px; color: #0a2540; margin: 0 0 10px 0; font-weight: 600; }
+    /* How to Use Grid Setup */
+    .info-card { background: transparent; padding: 0; margin-top: 50px; border: none; box-shadow: none; }
+	.info-card h2 { font-size: 24px; margin-bottom: 30px; color: #184c54; text-align: center; font-weight: 700; }
+	.how-to-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
+	.step-card { background: white; padding: 25px; border-radius: 16px; border: 1px solid #eef2f7; box-shadow: 0 4px 6px rgba(0,0,0,0.02); transition: all 0.3s ease; position: relative; overflow: hidden; }
+	.step-card:hover { transform: translateY(-5px); box-shadow: 0 12px 24px rgba(24, 76, 84, 0.08); border-color: #c79b63; }
+	.step-badge { background: #e8f0f1; color: #184c54; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; margin-bottom: 16px; }
+	.step-title { font-size: 16px; color: #184c54; margin: 0 0 10px 0; font-weight: 600; }
 	.step-text { margin: 0; font-size: 13.5px; color: #636e72; line-height: 1.6; }
 
-    /* New classes for the full-width bottom banner */
-    .step-final { grid-column: 1 / -1; display: flex; align-items: center; background: linear-gradient(135deg, #f4f9ff, #e1effe); border: 1px solid #1976d2; }
-    .step-final .step-badge { margin-bottom: 0; margin-right: 20px; flex-shrink: 0; background: #1976d2; color: white; }
-    .step-final-content { flex-grow: 1; }
+    /* The Premium Teal & Gold Banner for Step 5 */
+    .step-final { grid-column: 1 / -1; display: flex; align-items: center; background: #184c54; border: 1px solid #c79b63; }
+    .step-final .step-badge { margin-bottom: 0; margin-right: 20px; flex-shrink: 0; background: #c79b63; color: #184c54; }
+    .step-final-content h4 { color: #c79b63 !important; }
+    .step-final-content p { color: #e8f0f1 !important; }
 
-    /* Stack it vertically on small mobile screens */
-    @media (max-width: 768px) {
-        .step-final { flex-direction: column; align-items: flex-start; }
-        .step-final .step-badge { margin-bottom: 16px; }
-    }
+    /* FAQ Section */
+    .faq-section { margin-top: 60px; padding: 30px; background: white; border-radius: 12px; border: 1px solid #eef2f7; }
+    .faq-section h3 { font-size: 16px; color: #184c54; margin-top: 20px; }
 
     /* Modal Styles */
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
     .modal-content { background: white; padding: 30px; border-radius: 12px; width: 90%; max-width: 500px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); position: relative; }
-    .modal-header { font-size: 20px; font-weight: bold; color: #0d47a1; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-    .close-btn { position: absolute; top: 20px; right: 20px; font-size: 24px; cursor: pointer; color: #999; line-height: 1; border: none; background: none; }
-    .close-btn:hover { color: #333; }
-    .modal-results { background: #e6f4ea; border: 1px solid #c3e6cb; padding: 15px; border-radius: 8px; margin-top: 20px; }
+    .modal-header { font-size: 20px; font-weight: bold; color: #184c54; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+    .close-btn { position: absolute; top: 20px; right: 20px; font-size: 24px; cursor: pointer; color: #999; border: none; background: none; }
+    .modal-results { background: #fdfaf2; border: 1px solid #c79b63; padding: 15px; border-radius: 8px; margin-top: 20px; }
     .modal-results p { margin: 5px 0; font-size: 14px; display: flex; justify-content: space-between; }
-    .modal-results .highlight { font-weight: bold; font-size: 16px; color: #155724; border-top: 1px solid #c3e6cb; padding-top: 10px; margin-top: 10px; }
-    
-    .limit-badge { display: inline-block; background: #e3f2fd; color: #0d47a1; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin-left: 5px; font-weight: normal; }
+    .modal-results .highlight { font-weight: bold; font-size: 16px; color: #184c54; border-top: 1px solid #c79b63; padding-top: 10px; margin-top: 10px; }
+    .limit-badge { display: inline-block; background: #e8f0f1; color: #184c54; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin-left: 5px; font-weight: normal; }
 
-    @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } .table-grid { grid-template-columns: 1fr; } .income-section { grid-column: span 1; } .full-width { grid-column: span 1; } .container { padding: 15px; margin-top: -20px; } }
+    @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } .table-grid { grid-template-columns: 1fr; } .income-section { grid-column: span 1; } .full-width { grid-column: span 1; } .step-final { flex-direction: column; align-items: flex-start; } .step-final .step-badge { margin-bottom: 16px; } }
     </style>
 
 	<script type="application/ld+json">
