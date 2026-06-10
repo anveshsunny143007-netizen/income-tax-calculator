@@ -1,91 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>Income Tax Calculator FY 2025-26 (AY 2026-27) | New vs Old Regime</title>
-    <meta name="title" content="Income Tax Calculator FY 2025-26 (AY 2026-27) | New vs Old Regime">
+    <!-- Primary Meta Tags -->
+    <title>Income Tax Calculator FY 2025-26 (AY 2026-27) | TaxMojo</title>
+    <meta name="title" content="Income Tax Calculator FY 2025-26 (AY 2026-27) | TaxMojo">
     <meta name="description" content="Free, accurate Indian Income Tax Calculator for FY 2025-26. Compare the New and Old tax regimes, calculate HRA, and optimize your salary structure instantly.">
     <meta name="keywords" content="income tax calculator, tax calculator india, new tax regime calculator, old vs new tax regime, FY 2025-26 tax calculator, AY 2026-27, HRA calculator, capital gains tax calculator">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://income-tax-calculator-pajj.onrender.com/">
-
+    
+    <!-- Open Graph / Social Sharing -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://income-tax-calculator-pajj.onrender.com/">
     <meta property="og:title" content="Advanced Income Tax Optimizer FY 2025-26">
     <meta property="og:description" content="Find out if the New or Old tax regime saves you more money. Includes Crypto, Capital Gains, and HRA optimization.">
-    <meta property="og:image" content="https://income-tax-calculator-pajj.onrender.com/static/logo.png">
-    <style>
-	body { font-family: 'Segoe UI', sans-serif; background: #f4f7fc; margin: 0; padding: 0; color: #2d3436; }
-	.hero { background: #184c54; color: white; padding: 40px 20px; text-align: center; border-bottom: 4px solid #c79b63; }
-	.hero h1 { color: #c79b63; margin-top: 10px; margin-bottom: 5px; font-size: 28px; }
-	.container { max-width: 900px; margin: -30px auto 60px auto; padding: 30px; }
-	.card { background: white; padding: 25px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); margin-bottom: 30px; }
-	.form-grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 40px; row-gap: 20px; }
-	label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 5px; }
-	input, select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #dfe6e9; font-size: 14px; box-sizing: border-box; }
-	input:focus, select:focus { outline: none; border-color: #184c54; box-shadow: 0 0 0 3px rgba(24, 76, 84, 0.1); }
-	
-    .income-section { grid-column: span 2; background: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #e1e4e8; margin-bottom: 10px; position: relative; }
-	.income-section h4 { margin-top: 0; margin-bottom: 15px; color: #184c54; font-size: 16px; border-bottom: 2px solid #eef2f7; padding-bottom: 10px; }
-	
-    .live-total { text-align: right; margin-top: 15px; font-size: 18px; font-weight: bold; color: #184c54; }
-    .live-preview-box { margin-top: 15px; padding-top: 15px; border-top: 1px solid #e1e4e8; text-align: right; font-size: 15px; color: #444; }
-	.full-width { grid-column: span 2; text-align: center; margin-top: 10px; }
-	
-    /* Teal Primary Button */
-    button { padding: 15px; width: 100%; border-radius: 8px; border: none; font-size: 16px; font-weight: bold; background: #184c54; color: white; cursor: pointer; transition: 0.3s; margin-top: 20px;}
-	button:hover { background: #123a40; }
-    
-    /* Teal Outline Button */
-    .btn-outline { background: transparent; border: 2px solid #184c54; color: #184c54; padding: 8px 15px; font-size: 13px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; width: 100%; margin-top: 10px; }
-    .btn-outline:hover { background: #e8f0f1; }
-	
-    .table-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-	table { width: 100%; border-collapse: collapse; font-size: 13px; }
-	th { background: #f1f4f9; padding: 10px; text-align: center; color: #184c54; }
-	td { padding: 8px; text-align: center; border-bottom: 1px solid #eef2f7; }
-	
-    /* How to Use Grid Setup */
-    .info-card { background: transparent; padding: 0; margin-top: 50px; border: none; box-shadow: none; }
-	.info-card h2 { font-size: 24px; margin-bottom: 30px; color: #184c54; text-align: center; font-weight: 700; }
-	.how-to-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
-	.step-card { background: white; padding: 25px; border-radius: 16px; border: 1px solid #eef2f7; box-shadow: 0 4px 6px rgba(0,0,0,0.02); transition: all 0.3s ease; position: relative; overflow: hidden; }
-	.step-card:hover { transform: translateY(-5px); box-shadow: 0 12px 24px rgba(24, 76, 84, 0.08); border-color: #c79b63; }
-	.step-badge { background: #e8f0f1; color: #184c54; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; margin-bottom: 16px; }
-	.step-title { font-size: 16px; color: #184c54; margin: 0 0 10px 0; font-weight: 600; }
-	.step-text { margin: 0; font-size: 13.5px; color: #636e72; line-height: 1.6; }
+    <meta property="og:image" content="/static/logo.png">
 
-    /* The Premium Teal & Gold Banner for Step 5 */
-    .step-final { grid-column: 1 / -1; display: flex; align-items: center; background: #184c54; border: 1px solid #c79b63; }
-    .step-final .step-badge { margin-bottom: 0; margin-right: 20px; flex-shrink: 0; background: #c79b63; color: #184c54; }
-    .step-final-content h4 { color: #c79b63 !important; }
-    .step-final-content p { color: #e8f0f1 !important; }
-
-    /* FAQ Section */
-    .faq-section { margin-top: 60px; padding: 30px; background: white; border-radius: 12px; border: 1px solid #eef2f7; }
-    .faq-section h3 { font-size: 16px; color: #184c54; margin-top: 20px; }
-
-    /* Modal Styles */
-    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
-    .modal-content { background: white; padding: 30px; border-radius: 12px; width: 90%; max-width: 500px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); position: relative; }
-    .modal-header { font-size: 20px; font-weight: bold; color: #184c54; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-    .close-btn { position: absolute; top: 20px; right: 20px; font-size: 24px; cursor: pointer; color: #999; border: none; background: none; }
-    .modal-results { background: #fdfaf2; border: 1px solid #c79b63; padding: 15px; border-radius: 8px; margin-top: 20px; }
-    .modal-results p { margin: 5px 0; font-size: 14px; display: flex; justify-content: space-between; }
-    .modal-results .highlight { font-weight: bold; font-size: 16px; color: #184c54; border-top: 1px solid #c79b63; padding-top: 10px; margin-top: 10px; }
-    .limit-badge { display: inline-block; background: #e8f0f1; color: #184c54; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin-left: 5px; font-weight: normal; }
-
-    @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } .table-grid { grid-template-columns: 1fr; } .income-section { grid-column: span 1; } .full-width { grid-column: span 1; } .step-final { flex-direction: column; align-items: flex-start; } .step-final .step-badge { margin-bottom: 16px; } }
-    </style>
-
-	<script type="application/ld+json">
+    <!-- Schema.org Markup for Google SEO -->
+    <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebApplication",
-      "name": "Advanced Income Tax Calculator India",
-      "url": "https://income-tax-calculator-pajj.onrender.com/",
+      "name": "TaxMojo Income Tax Calculator",
       "description": "Calculate and compare Indian Income Tax under the New and Old regimes for FY 2025-26. Includes deductions, HRA, and capital gains.",
       "applicationCategory": "FinanceApplication",
       "operatingSystem": "All",
@@ -102,19 +39,86 @@
       ]
     }
     </script>
-	
+
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #f4f7fc; margin: 0; padding: 0; color: #2d3436; }
+        .hero { background: #184c54; color: white; padding: 40px 20px; text-align: center; border-bottom: 4px solid #c79b63; }
+        .hero h1 { color: #c79b63; margin-top: 15px; margin-bottom: 5px; font-size: 28px; }
+        .container { max-width: 900px; margin: -30px auto 60px auto; padding: 30px; }
+        .card { background: white; padding: 25px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); margin-bottom: 30px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 40px; row-gap: 20px; }
+        label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 5px; color: #2d3142; }
+        input, select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #dfe6e9; font-size: 14px; box-sizing: border-box; color: #2d3142; }
+        input:focus, select:focus { outline: none; border-color: #184c54; box-shadow: 0 0 0 3px rgba(24, 76, 84, 0.1); }
+        
+        .income-section { grid-column: span 2; background: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #e1e4e8; margin-bottom: 10px; position: relative; }
+        .income-section h4 { margin-top: 0; margin-bottom: 15px; color: #184c54; font-size: 16px; border-bottom: 2px solid #eef2f7; padding-bottom: 10px; }
+        
+        .live-total { text-align: right; margin-top: 15px; font-size: 18px; font-weight: bold; color: #184c54; }
+        .live-preview-box { margin-top: 15px; padding-top: 15px; border-top: 1px solid #e1e4e8; text-align: right; font-size: 15px; color: #444; }
+        .full-width { grid-column: span 2; text-align: center; margin-top: 10px; }
+        
+        button { padding: 15px; width: 100%; border-radius: 8px; border: none; font-size: 16px; font-weight: bold; background: #184c54; color: white; cursor: pointer; transition: 0.3s; margin-top: 20px;}
+        button:hover { background: #123a40; }
+        
+        .btn-outline { background: transparent; border: 2px solid #184c54; color: #184c54; padding: 8px 15px; font-size: 13px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; width: 100%; margin-top: 10px; }
+        .btn-outline:hover { background: #e8f0f1; }
+        
+        .table-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th { background: #f1f4f9; padding: 10px; text-align: center; color: #184c54; }
+        td { padding: 8px; text-align: center; border-bottom: 1px solid #eef2f7; }
+        
+        /* How to Use Grid Setup */
+        .info-card { background: transparent; padding: 0; margin-top: 50px; border: none; box-shadow: none; }
+        .info-card h2 { font-size: 24px; margin-bottom: 30px; color: #184c54; text-align: center; font-weight: 700; }
+        .how-to-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
+        .step-card { background: white; padding: 25px; border-radius: 16px; border: 1px solid #eef2f7; box-shadow: 0 4px 6px rgba(0,0,0,0.02); transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .step-card:hover { transform: translateY(-5px); box-shadow: 0 12px 24px rgba(24, 76, 84, 0.08); border-color: #c79b63; }
+        .step-badge { background: #e8f0f1; color: #184c54; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; margin-bottom: 16px; }
+        .step-title { font-size: 16px; color: #184c54; margin: 0 0 10px 0; font-weight: 600; }
+        .step-text { margin: 0; font-size: 13.5px; color: #636e72; line-height: 1.6; }
+
+        .step-final { grid-column: 1 / -1; display: flex; align-items: center; background: #184c54; border: 1px solid #c79b63; }
+        .step-final .step-badge { margin-bottom: 0; margin-right: 20px; flex-shrink: 0; background: #c79b63; color: #184c54; }
+        .step-final-content h4 { color: #c79b63 !important; }
+        .step-final-content p { color: #e8f0f1 !important; }
+
+        .faq-section { margin-top: 60px; padding: 30px; background: white; border-radius: 12px; border: 1px solid #eef2f7; box-shadow: 0 10px 25px rgba(0,0,0,0.04); }
+        .faq-section h3 { font-size: 16px; color: #184c54; margin-top: 25px; margin-bottom: 8px; }
+        .faq-section p { font-size: 14px; color: #4a5568; margin-top: 0; }
+
+        /* Modal Styles */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
+        .modal-content { background: white; padding: 30px; border-radius: 12px; width: 90%; max-width: 500px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); position: relative; }
+        .modal-header { font-size: 20px; font-weight: bold; color: #184c54; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .close-btn { position: absolute; top: 20px; right: 20px; font-size: 24px; cursor: pointer; color: #999; border: none; background: none; }
+        .modal-results { background: #fdfaf2; border: 1px solid #c79b63; padding: 15px; border-radius: 8px; margin-top: 20px; }
+        .modal-results p { margin: 5px 0; font-size: 14px; display: flex; justify-content: space-between; }
+        .modal-results .highlight { font-weight: bold; font-size: 16px; color: #184c54; border-top: 1px solid #c79b63; padding-top: 10px; margin-top: 10px; }
+        .limit-badge { display: inline-block; background: #e8f0f1; color: #184c54; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin-left: 5px; font-weight: normal; }
+
+        @media (max-width: 768px) { 
+            .form-grid { grid-template-columns: 1fr; } 
+            .table-grid { grid-template-columns: 1fr; } 
+            .income-section { grid-column: span 1; } 
+            .full-width { grid-column: span 1; } 
+            .step-final { flex-direction: column; align-items: flex-start; } 
+            .step-final .step-badge { margin-bottom: 16px; } 
+        }
+    </style>
 </head>
 <body>
 
 <div class="hero">
     <img src="/static/logo.png" alt="TaxMojo Logo" style="height: 80px; drop-shadow: 0 4px 6px rgba(0,0,0,0.3);">
     <h1>Income Tax Calculator 2025-26</h1>
-    <p style="color: #eef2f7;">Compare Old vs New Tax Regime | Pro Salary Simulator | Instant Analysis</p>
+    <p style="color: #eef2f7; margin-top: 0;">Compare Old vs New Tax Regime | Pro Salary Simulator | Instant Analysis</p>
 </div>
 
 <div class="container">
     <div class="card">
-        <h3>📌 Quick Tax Comparison</h3>
+        <h3 style="color: #184c54; margin-top: 0;">📌 Quick Tax Comparison</h3>
 
         <form id="taxForm" method="post" action="/calculate">
             <div class="form-grid">
@@ -142,7 +146,7 @@
                     <div class="form-grid">
                         <div>
                             <label>Gross Salary / Pension</label>
-                            <input type="text" inputmode="numeric" name="salary_income" class="num-format" value="0" required>
+                            <input type="text" inputmode="numeric" name="salary_income" id="salary_income_input" class="num-format" value="0" required>
                         </div>
                         <div>
                             <label>Rental Income (Gross)</label>
@@ -173,8 +177,8 @@
                     </div>
                 </div>
 
-                <div class="income-section" style="background: #fff3e0;">
-                    <h4 style="color: #e67e22;">📈 Capital Gains & Crypto (Special Tax Rates)</h4>
+                <div class="income-section" style="background: #fffdf5; border-color: #f5e6d3;">
+                    <h4 style="color: #b07000;">📈 Capital Gains & Crypto (Special Tax Rates)</h4>
                     <div class="form-grid">
                         <div>
                             <label>Short Term Capital Gains (Equity)</label>
@@ -188,7 +192,7 @@
                         <div>
                             <label>Crypto Gains/Losses (VDA)</label>
                             <input type="text" inputmode="numeric" name="crypto_income" class="num-format" value="0" required>
-                            <small style="font-size: 11px; color: #d9534f;">*Flat 30% tax under Sec 115BBH. Losses are ignored per rules.</small>
+                            <small style="font-size: 11px; color: #d9534f;">*Flat 30% tax under Sec 115BBH. Losses are ignored.</small>
                         </div>
                     </div>
                     <div class="live-total">
@@ -196,14 +200,14 @@
                     </div>
                 </div>
 
-                <div class="income-section" style="background: #e3f2fd;">
-                    <h4 style="color: #0277bd;">🏠 Salary Exemptions & Allowances (Old Regime)</h4>
+                <div class="income-section" style="background: #f0f7ff; border-color: #dbeafe;">
+                    <h4 style="color: #0369a1;">🏠 Salary Exemptions & Allowances (Old Regime)</h4>
                     
-                    <div style="background: white; padding: 15px; border-radius: 8px; border: 1px dashed #0277bd; margin-bottom: 20px;">
+                    <div style="background: white; padding: 15px; border-radius: 8px; border: 1px dashed #184c54; margin-bottom: 20px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
                             <div>
-                                <strong style="color: #0d47a1; display: block; margin-bottom: 5px;">House Rent Allowance (HRA)</strong>
-                                <span style="font-size: 12px; color: #555;">Current Exempt HRA computed: <strong id="mainFormExemptHRA" style="color: #28a745;">₹0</strong></span>
+                                <strong style="color: #184c54; display: block; margin-bottom: 5px;">House Rent Allowance (HRA)</strong>
+                                <span style="font-size: 12px; color: #555;">Current Exempt HRA computed: <strong id="mainFormExemptHRA" style="color: #008771;">₹0</strong></span>
                             </div>
                             <button type="button" class="btn-outline" onclick="openHraModal()" style="width: auto; margin-top: 0;">🧮 Open HRA Calculator</button>
                         </div>
@@ -222,22 +226,23 @@
                             <input type="text" inputmode="numeric" name="home_loan_interest" class="num-format dynamic-cap" data-max="200000" value="0">
                         </div>
                         <div>
-                            <label>Professional Tax Paid <span class="limit-badge">Max: 2,500</span></label>
-                            <input type="text" inputmode="numeric" name="professional_tax" class="num-format dynamic-cap" data-max="2500" value="0">
+                            <label>Professional Tax Paid (PT) <span class="limit-badge">Max: 2,500</span></label>
+                            <input type="text" inputmode="numeric" name="professional_tax" id="pt_input" class="num-format dynamic-cap" data-max="2500" value="0">
+                            <small style="font-size: 11px; color: #666;">*Auto-fills ₹2500 when salary is entered</small>
                         </div>
                         <div>
                             <label>Leave Travel Allowance (LTA)</label>
                             <input type="text" inputmode="numeric" name="lta_exemption" class="num-format" value="0">
-                            <small style="font-size: 11px; color: #666;">*Enter the eligible exempt amount based on actual travel bills.</small>
+                            <small style="font-size: 11px; color: #666;">*Enter the eligible exempt amount</small>
                         </div>
                     </div>
                 </div>
 
-                <div class="income-section" style="background: #fdfdfd;">
-                    <h4 style="color: #d9534f;">📉 Tax Deductions (Old Regime)</h4>
+                <div class="income-section" style="background: #fff5f5; border-color: #ffe4e6;">
+                    <h4 style="color: #c3273e;">📉 Tax Deductions (Old Regime)</h4>
                     <div class="form-grid">
                         <div>
-                            <label>80C Deduction (PPF, ELSS, EPF) <span class="limit-badge">Max: 1.5L</span></label>
+                            <label>80C Deduction (PPF, ELSS) <span class="limit-badge">Max: 1.5L</span></label>
                             <input type="text" inputmode="numeric" name="deduction_80c" class="num-format dynamic-cap" data-max="150000" value="0">
                         </div>
                         <div>
@@ -245,7 +250,7 @@
                             <input type="text" inputmode="numeric" name="nps_80ccd1b" class="num-format dynamic-cap" data-max="50000" value="0">
                         </div>
                         <div>
-                            <label id="lbl80D">80D Deduction (Health Ins.) <span class="limit-badge">Max: 25k</span></label>
+                            <label id="lbl80D">80D Deduction (Health Ins) <span class="limit-badge">Max: 25k</span></label>
                             <input type="text" inputmode="numeric" name="deduction_80d" id="input80d" class="num-format dynamic-cap" data-max="25000" value="0">
                         </div>
                         <div>
@@ -260,22 +265,23 @@
                         <div>
                             <label>Donations (80G - 50% Exemption)</label>
                             <input type="text" inputmode="numeric" name="deduction_80g_50" class="num-format" value="0">
-                            <small style="font-size: 11px; color: #666;">10% AGTI cap applied automatically in backend.</small>
+                            <small style="font-size: 11px; color: #666;">10% AGTI cap applied securely in backend.</small>
                         </div>
                         <div>
                             <label>Other Deductions</label>
                             <input type="text" inputmode="numeric" name="other_deductions" class="num-format" value="0">
                         </div>
                     </div>
+                    
                     <div class="live-preview-box">
-                        <div style="margin-bottom: 5px;">Estimated New Regime Tax: <strong style="color: #007bff;" id="previewNewTax">₹0</strong></div>
-                        <div>Estimated Old Regime Tax: <strong style="color: #d9534f;" id="previewOldTax">₹0</strong></div>
+                        <div style="margin-bottom: 5px;">Estimated New Regime Tax: <strong style="color: #184c54;" id="previewNewTax">₹0</strong></div>
+                        <div>Estimated Old Regime Tax: <strong style="color: #c79b63;" id="previewOldTax">₹0</strong></div>
                         <small style="color: #999; font-size: 11px;">(Live quick approximation)</small>
                     </div>
                 </div>
 
-                <div class="income-section" style="background: #f4f6f9;">
-                    <h4 style="color: #6c757d;">🔮 Future Projection Settings</h4>
+                <div class="income-section" style="background: white;">
+                    <h4 style="color: #697386;">🔮 Future Projection Settings</h4>
                     <div class="form-grid">
                         <div>
                             <label>Expected Annual Income Growth (%)</label>
@@ -294,57 +300,66 @@
     </div>
 
     <div class="card">
-        <h3 id="slabTitle">Income Tax Slab Rates</h3>
+        <h3 id="slabTitle" style="color: #184c54; margin-top: 0;">Income Tax Slab Rates</h3>
         <div class="table-grid">
             <div>
-                <h4>New Regime</h4>
+                <h4 style="color: #4a5568;">New Regime</h4>
                 <table id="newRegimeTable"></table>
             </div>
             <div>
-                <h4>Old Regime (Below 60)</h4>
+                <h4 style="color: #4a5568;">Old Regime (Below 60)</h4>
                 <table id="oldRegimeTable"></table>
             </div>
         </div>
     </div>
-	
-	<div class="info-card">
+    
+    <div class="info-card">
         <h2>How to Use the Tax Calculator</h2>
-        
         <div class="how-to-grid">
             <div class="step-card">
                 <div class="step-badge">1</div>
                 <h4 class="step-title">Select Financial Year & Age</h4>
                 <p class="step-text">Start by choosing the relevant Financial Year. The calculator will automatically update slab rates, standard deductions, and capital gains rules. Adjusting your age will automatically cap deductions like 80D properly.</p>
             </div>
-
             <div class="step-card">
                 <div class="step-badge">2</div>
                 <h4 class="step-title">Enter Your Income Sources</h4>
                 <p class="step-text">Fill in your Gross Salary, Business income, or Rental income. For Rental income, the tool automatically applies the 30% standard deduction for repairs.</p>
             </div>
-
             <div class="step-card">
                 <div class="step-badge">3</div>
                 <h4 class="step-title">Include Capital Gains & Crypto</h4>
                 <p class="step-text">Enter any profits from stocks (STCG/LTCG). If you have Crypto gains, the tool applies a flat 30% tax as per Section 115BBH. Losses are intentionally ignored as per tax laws.</p>
             </div>
-
             <div class="step-card">
                 <div class="step-badge">4</div>
                 <h4 class="step-title">Calculate HRA & Deductions</h4>
                 <p class="step-text">Click the "Open HRA Calculator" to let the software legally determine your exempted rent amount. Fill in your 80C and 80D investments to see if the Old Regime saves you more money.</p>
             </div>
-
-            <!-- Full width banner step -->
             <div class="step-card step-final">
                 <div class="step-badge">5</div>
                 <div class="step-final-content">
-                    <h4 class="step-title" style="color: #0d47a1;">Compare & Analyze</h4>
-                    <p class="step-text" style="color: #4a5568;">The "Live Preview" box updates instantly. Click <strong>"Compare & Produce Pro Advisory"</strong> to get a detailed breakdown and professional advice on which regime to choose.</p>
+                    <h4 class="step-title">Compare & Analyze</h4>
+                    <p class="step-text">The "Live Preview" box updates instantly. Click <strong>"Compare & Produce Pro Advisory"</strong> to get a detailed breakdown and professional advice on which regime to choose.</p>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- SEO FAQ Section -->
+    <div class="faq-section">
+        <h2 style="font-size: 24px; color: #184c54; text-align: center; margin-top: 0;">Frequently Asked Questions (FY 2025-26)</h2>
+        
+        <h3>What is the standard deduction for FY 2025-26?</h3>
+        <p>Under the New Tax Regime, the standard deduction has been increased to ₹75,000. Under the Old Regime, it remains at ₹50,000.</p>
+
+        <h3>Is the New Regime always better?</h3>
+        <p>Not always. If you claim significant Chapter VI-A deductions (like Section 80C, 80D) and have a high HRA exemption or Home Loan interest (Section 24b), the Old Regime might still yield a lower tax liability. Our calculator instantly compares both to find your lowest tax.</p>
+
+        <h3>How are Crypto and Virtual Digital Assets (VDAs) taxed?</h3>
+        <p>According to Section 115BBH, crypto gains are taxed at a flat 30% plus a 4% cess. They do not benefit from the basic exemption limit, and crypto losses cannot be offset against other income.</p>
+    </div>
+</div>
 
 <div class="modal-overlay" id="hraModal">
     <div class="modal-content">
@@ -386,7 +401,7 @@
             </div>
         </div>
 
-        <button type="button" onclick="applyHraToMain()" style="width: 100%; margin-top: 20px; background: #28a745;">Save & Apply to Tax Form</button>
+        <button type="button" onclick="applyHraToMain()" style="width: 100%; margin-top: 20px; background: #184c54; color: white; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">Save & Apply to Tax Form</button>
     </div>
 </div>
 
@@ -414,7 +429,7 @@
             e.target.value = (isNegative ? '-' : '') + parsed.toLocaleString('en-IN'); 
         }
         
-        // Decide which preview to update based on where the input is
+        // Decide which preview to update
         if(e.target.classList.contains('modal-calc')) {
             calculateHraLive();
         } else {
@@ -429,13 +444,25 @@
         return Number(numStr) || 0;
     }
 
-    // Attach listeners
+    // Attach formatting listeners
     document.querySelectorAll('.num-format').forEach(input => { 
         input.addEventListener('input', formatNumber); 
     });
     document.getElementById('modal_city').addEventListener('change', calculateHraLive);
 
-    // --- Dynamic Age Logic (Winman UI rules) ---
+    // --- NEW: Professional Tax Auto-Fill Logic ---
+    document.getElementById('salary_income_input').addEventListener('input', function(e) {
+        let salaryVal = getVal("salary_income");
+        let ptInput = document.getElementById('pt_input');
+        
+        // Auto-fill PT to 2500 only if salary is > 0 and PT is currently empty/0
+        if (salaryVal > 0 && (ptInput.value === '0' || ptInput.value === '')) {
+            ptInput.value = "2,500";
+            calculateLivePreview(); // trigger recalculation
+        }
+    });
+
+    // --- Dynamic Age Logic ---
     document.getElementById('ageSelect').addEventListener('change', function() {
         const age = this.value;
         const lbl80D = document.getElementById('lbl80D');
@@ -443,15 +470,14 @@
         const lbl80TTA = document.getElementById('lbl80TTA');
 
         if (age === 'senior' || age === 'super_senior') {
-            lbl80D.innerHTML = '80D Deduction (Health Ins.) <span class="limit-badge">Max: 50k</span>';
+            lbl80D.innerHTML = '80D Deduction (Health Ins) <span class="limit-badge">Max: 50k</span>';
             input80D.setAttribute('data-max', '50000');
             lbl80TTA.innerHTML = '<span class="limit-badge">80TTB Max Ded: 50k</span>';
         } else {
-            lbl80D.innerHTML = '80D Deduction (Health Ins.) <span class="limit-badge">Max: 25k</span>';
+            lbl80D.innerHTML = '80D Deduction (Health Ins) <span class="limit-badge">Max: 25k</span>';
             input80D.setAttribute('data-max', '25000');
             lbl80TTA.innerHTML = '<span class="limit-badge">80TTA Max Ded: 10k</span>';
             
-            // Re-validate if user had entered 50k but switched back to below 60
             let current80D = getVal('deduction_80d');
             if (current80D > 25000) {
                 input80D.value = "25,000";
@@ -463,7 +489,6 @@
     // --- HRA Modal Logic ---
     function openHraModal() {
         document.getElementById('hraModal').style.display = 'flex';
-        // Pre-fill modal with existing hidden values if they exist
         document.getElementById('modal_basic').value = document.getElementById('main_basic_salary').value;
         document.getElementById('modal_hra_rec').value = document.getElementById('main_hra_received').value;
         document.getElementById('modal_rent').value = document.getElementById('main_rent_paid').value;
@@ -500,13 +525,11 @@
     }
 
     function applyHraToMain() {
-        // Sync values to hidden form fields
         document.getElementById('main_basic_salary').value = document.getElementById('modal_basic').value;
         document.getElementById('main_hra_received').value = document.getElementById('modal_hra_rec').value;
         document.getElementById('main_rent_paid').value = document.getElementById('modal_rent').value;
         document.getElementById('main_is_metro').value = document.getElementById('modal_city').value;
         
-        // Update display text
         let exemptAmount = calculateHraLive();
         document.getElementById('mainFormExemptHRA').innerText = "₹" + exemptAmount.toLocaleString('en-IN');
         
@@ -514,10 +537,9 @@
         calculateLivePreview();
     }
 
-
-    // --- Core Tax Logic ---
+    // --- Core Submit Logic ---
     document.getElementById('taxForm').addEventListener('submit', function(e) {
-        // Clean commas from ALL inputs before posting
+        // Strip commas from all numeric inputs AND hidden HRA inputs before backend submission
         const inputsToClean = [
             ...document.querySelectorAll('.num-format'),
             document.getElementById('main_basic_salary'),
@@ -575,7 +597,6 @@
         const d80g50 = getVal("deduction_80g_50");
         const dOther = getVal("other_deductions");
 
-        // Fetch hidden HRA data
         const basic = getVal("main_basic_salary", false);
         const hraRec = getVal("main_hra_received", false);
         const rentPd = getVal("main_rent_paid", false);
@@ -666,7 +687,6 @@
     }
 
     document.getElementById('yearSelect').addEventListener('change', () => { renderTables(); calculateLivePreview(); });
-
     calculateLivePreview(); 
 
     function renderTables() {
@@ -694,19 +714,5 @@
     }
     renderTables();
 </script>
-
-	<div class="info-card" style="margin-top: 60px; padding: 30px; background: white; border-radius: 12px; border: 1px solid #eef2f7;">
-        <h2 style="font-size: 22px; color: #0a2540;">Frequently Asked Questions (FY 2025-26)</h2>
-        
-        <h3 style="font-size: 16px; color: #1976d2; margin-top: 20px;">What is the standard deduction for FY 2025-26?</h3>
-        <p style="font-size: 14px; color: #4a5568;">Under the New Tax Regime, the standard deduction has been increased to ₹75,000. Under the Old Regime, it remains at ₹50,000.</p>
-
-        <h3 style="font-size: 16px; color: #1976d2; margin-top: 20px;">Is the New Regime always better?</h3>
-        <p style="font-size: 14px; color: #4a5568;">Not always. If you claim significant Chapter VI-A deductions (like Section 80C, 80D) and have a high HRA exemption or Home Loan interest (Section 24b), the Old Regime might still yield a lower tax liability. Our calculator instantly compares both to find your lowest tax.</p>
-
-        <h3 style="font-size: 16px; color: #1976d2; margin-top: 20px;">How are Crypto and Virtual Digital Assets (VDAs) taxed?</h3>
-        <p style="font-size: 14px; color: #4a5568;">According to Section 115BBH, crypto gains are taxed at a flat 30% plus a 4% cess. They do not benefit from the basic exemption limit, and crypto losses cannot be offset against other income.</p>
-    </div>
-	
 </body>
 </html>
