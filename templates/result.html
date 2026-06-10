@@ -79,7 +79,18 @@
         .slab-table th { background: var(--gray-light); padding: 8px 12px; font-size: 11px; }
         .slab-table td { padding: 8px 12px; font-size: 13px; }
 
-        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(48%, 1fr)); gap: 24px; }
+        /* Strict 2-Column Grid for Side-by-Side Comparison */
+        .grid-2 { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 24px; 
+            align-items: start; 
+        }
+
+        /* Only stack them if the user is on a mobile phone */
+        @media (max-width: 900px) { 
+            .grid-2 { grid-template-columns: 1fr; } 
+        }
         .roadmap-list { list-style: none; padding: 0; margin: 0; }
         .roadmap-item { background: var(--gray-light); padding: 16px; border-radius: 8px; margin-bottom: 12px; display: flex; align-items: center; border: 1px solid var(--gray-border); font-weight: 500; }
         .roadmap-item::before { content: '🎯'; margin-right: 12px; font-size: 18px; }
@@ -509,46 +520,69 @@ document.addEventListener("DOMContentLoaded", function() {
     const oldData = {{ old_taxes | safe }};
     
     new Chart(ctx, {
-        type: 'line',
+        type: 'bar', // Upgraded to a Bar Chart
         data: {
             labels: labels,
             datasets: [
                 {
-                    label: 'New Regime Profile',
+                    label: 'New Regime Tax',
                     data: newData,
-                    borderColor: '#184c54', /* Deep Teal */
-                    backgroundColor: 'rgba(24, 76, 84, 0.05)',
-                    borderWidth: 2.5,
-                    fill: true,
-                    tension: 0.15,
-                    pointRadius: 4
+                    backgroundColor: '#184c54', /* TaxMojo Teal */
+                    borderRadius: 6, /* Modern rounded corners */
+                    barPercentage: 0.7,
+                    categoryPercentage: 0.8
                 },
                 {
-                    label: 'Old Regime Profile',
+                    label: 'Old Regime Tax',
                     data: oldData,
-                    borderColor: '#c79b63', /* Gold */
-                    backgroundColor: 'transparent',
-                    borderWidth: 2,
-                    borderDash: [5, 5],
-                    fill: false,
-                    tension: 0.15,
-                    pointRadius: 4
+                    backgroundColor: '#c79b63', /* TaxMojo Gold */
+                    borderRadius: 6,
+                    barPercentage: 0.7,
+                    categoryPercentage: 0.8
                 }
             ]
         },
         options: {
             responsive: true,
-            plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 12 } } } },
+            plugins: { 
+                legend: { 
+                    position: 'top', 
+                    labels: { usePointStyle: true, padding: 20, font: { family: 'Segoe UI', weight: '600' } } 
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    backgroundColor: 'rgba(24, 76, 84, 0.95)',
+                    titleFont: { size: 14 },
+                    bodyFont: { size: 13 },
+                    padding: 12,
+                    callbacks: {
+                        label: function(context) {
+                            return context.dataset.label + ': ₹' + context.raw.toLocaleString('en-IN');
+                        }
+                    }
+                }
+            },
             scales: {
                 y: {
-                    grid: { color: '#f1f5f9' },
-                    ticks: { callback: function(value) { return '₹' + value.toLocaleString('en-IN'); }, font: { size: 11 } }
+                    grid: { color: '#eef2f5', borderDash: [4, 4] }, /* Clean dashed grid lines */
+                    ticks: { 
+                        callback: function(value) { 
+                            if(value >= 100000) return '₹' + (value/100000).toFixed(2) + 'L'; 
+                            return '₹' + value.toLocaleString('en-IN');
+                        }, 
+                        font: { size: 12, weight: '500' },
+                        color: '#697386'
+                    },
+                    beginAtZero: true
                 },
-                x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+                x: { 
+                    grid: { display: false }, 
+                    ticks: { font: { size: 12, weight: '600' }, color: '#2d3142' } 
+                }
             }
         }
     });
-});
 
 const salary_income = {{ salary_income }};
 const business_income = {{ business_income }};
