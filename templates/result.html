@@ -278,7 +278,7 @@
                 <div style="max-height: 125px; overflow-y: auto; font-size:13px; margin-bottom: 10px;">
                     {% if old_data.hra_exemption > 0 %}<p style="margin:4px 0;">House Rent Mitigation (Sec 10): <span style="color: var(--danger)">-₹{{ "{:,.0f}".format(old_data.hra_exemption) }}</span></p>{% endif %}
                     {% if old_data.lta_exemption > 0 %}<p style="margin:4px 0;">Travel Exemption (Sec 10): <span style="color: var(--danger)">-₹{{ "{:,.0f}".format(old_data.lta_exemption) }}</span></p>{% endif %}
-                    {% if old_data.professional_tax > 0 %}<p style="margin:4px 0;">Employment Tax (Sec 16): <span style="color: var(--danger)">-₹{{ "{:,.0f}".format(old_data.professional_tax) }}</span></p>{% endif %}
+                    {% if old_data.professional_tax > 0 %}<p style="margin:4px 0;">Professional Tax (PT): <span style="color: var(--danger)">-₹{{ "{:,.0f}".format(old_data.professional_tax) }}</span></p>{% endif %}
                     <p style="margin:4px 0;">Standard Structural Claim (Sec 16): <span style="color: var(--danger)">-₹{{ "{:,.0f}".format(old_data.standard_deduction) }}</span></p>
                     {% if old_data.home_loan_loss_setoff < 0 %}
                     <p style="margin:4px 0;">Loss Settlement (Sec 24b): <span style="color: var(--danger)">-₹{{ "{:,.0f}".format(old_data.home_loan_loss_setoff | abs) }}</span></p>
