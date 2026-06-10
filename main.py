@@ -872,7 +872,6 @@ def optimize_tax(
 
 @app.get("/tools/{tool_id}", response_class=HTMLResponse)
 async def tool_pages(request: Request, tool_id: str):
-    # Dictionary of our advanced tools
     tools = {
         "heatmaps": "Nifty 500 Heatmaps",
         "breakout": "Momentum Breakout Scans",
@@ -886,12 +885,12 @@ async def tool_pages(request: Request, tool_id: str):
         "sector-etf": "Sectoral Momentum"
     }
     title = tools.get(tool_id, "Advanced Market Tool")
-    return templates.TemplateResponse("page.html", {"request": request, "title": title, "page_type": "tool"})
+    # Updated return syntax
+    return templates.TemplateResponse(request=request, name="page.html", context={"title": title, "page_type": "tool"})
 
 
 @app.get("/legal/{page_id}", response_class=HTMLResponse)
 async def legal_pages(request: Request, page_id: str):
-    # Dictionary of our guides and legal docs
     docs = {
         "80c-guide": "Section 80C Investment Guide",
         "crypto-tax": "Crypto Tax Rules (Sec 115BBH)",
@@ -900,4 +899,5 @@ async def legal_pages(request: Request, page_id: str):
         "contact": "Contact Advisory Team"
     }
     title = docs.get(page_id, "TaxMojo Resource")
-    return templates.TemplateResponse("page.html", {"request": request, "title": title, "page_type": "legal"})
+    # Updated return syntax
+    return templates.TemplateResponse(request=request, name="page.html", context={"title": title, "page_type": "legal"})
