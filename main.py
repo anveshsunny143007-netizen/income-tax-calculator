@@ -215,8 +215,8 @@ def calculate_new_regime(salary, business, rental, interest, dividend, foreign, 
         max_allowed_tax_on_eligible = excess_income
         if tax_eligible_for_rebate > max_allowed_tax_on_eligible:
             marginal_relief_87a = tax_eligible_for_rebate - max_allowed_tax_on_eligible
-            rebate = tax_eligible_for_rebate - max_allowed_tax_on_eligible
-            tax_after_rebate = total_tax_before_rebate - rebate - marginal_relief_87a
+            rebate = 0  # FIX: Reset standard rebate to 0 so the UI doesn't double-count
+            tax_after_rebate = total_tax_before_rebate - marginal_relief_87a # FIX: Subtract the relief exactly once
         else:
             tax_after_rebate = total_tax_before_rebate
 
