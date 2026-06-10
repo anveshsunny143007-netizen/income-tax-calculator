@@ -867,6 +867,14 @@ def optimize_tax(
     return {"optimized_tax": optimized_old["final_tax"]}
 
 # ==========================================
+# FREE UPTIMEROBOT WAKE-UP ROUTE
+# ==========================================
+@app.get("/ping")
+@app.head("/ping")
+def health_check():
+    return {"status": "awake, boss!"}
+
+# ==========================================
 # MULTI-PAGE ROUTING (MEGA FOOTER LINKS)
 # ==========================================
 
