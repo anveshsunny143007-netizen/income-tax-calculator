@@ -912,40 +912,61 @@ def tool_pages(request: Request, tool_id: str):
             scanner_url = "https://chartink.com/screener/swing-trade-16062218"
             
             with requests.Session() as s:
-                # 1. Use a real browser User-Agent to bypass Cloudflare bot protection
-                headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'}
+                # 1. Strongest possible browser disguise
+                headers = {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+                    'Accept-Language': 'en-US,en;q=0.9',
+                    'Sec-Ch-Ua': '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
+                    'Sec-Ch-Ua-Mobile': '?0',
+                    'Sec-Ch-Ua-Platform': '"Windows"',
+                }
+                
                 r = s.get(scanner_url, headers=headers, timeout=10)
                 
-                # 2. Extract Token and Scanner Logic 
-                # ADDED re.DOTALL: This forces Python to read the scanner even if it spans multiple lines!
-                csrf_match = re.search(r'name="csrf-token"\s+content="([^"]+)"', r.text, re.IGNORECASE)
-                clause_match = re.search(r'name="scan_clause".*?value="(.*?)"', r.text, re.IGNORECASE | re.DOTALL)
-                
-                if csrf_match and clause_match:
-                    csrf_token = csrf_match.group(1)
-                    scan_clause = html.unescape(clause_match.group(1))
-                    
-                    # 3. Post to the API processor to get live stock data
-                    post_headers = {
-                        'x-csrf-token': csrf_token,
-                        'x-requested-with': 'XMLHttpRequest',
-                        'referer': scanner_url,
-                        'User-Agent': headers['User-Agent']
-                    }
-                    payload = {'scan_clause': scan_clause}
-                    
-                    api_res = s.post('https://chartink.com/screener/process', headers=post_headers, data=payload, timeout=10)
-                    
-                    if api_res.status_code == 200:
-                        stock_data = api_res.json().get('data', [])
-                    else:
-                        print(f"Chartink API Blocked Request. Status Code: {api_res.status_code}")
+                if r.status_code != 200:
+                    stock_data = [{"nsecode": "ERROR", "name": f"Chartink blocked GET. Status: {r.status_code}", "close": 0, "per_chg": 0, "volume": 0}]
                 else:
-                    print("Could not find the hidden scanner formula on the page.")
+                    # 2. Bulletproof Regex to find the hidden tokens regardless of HTML order
+                    csrf_match = re.search(r'<meta[^>]*name="csrf-token"[^>]*content="([^"]+)"', r.text, re.IGNORECASE)
+                    clause_tag = re.search(r'<input[^>]*id="scan_clause"[^>]*>', r.text, re.IGNORECASE)
                     
+                    csrf_token = csrf_match.group(1) if csrf_match else ""
+                    scan_clause = ""
+                    
+                    if clause_tag:
+                        val_match = re.search(r'value="([^"]+)"', clause_tag.group(0), re.IGNORECASE)
+                        if val_match:
+                            scan_clause = html.unescape(val_match.group(1))
+                            
+                    if not csrf_token or not scan_clause:
+                        stock_data = [{"nsecode": "ERROR", "name": "Regex failed. Could not parse Chartink HTML.", "close": 0, "per_chg": 0, "volume": 0}]
+                    else:
+                        # 3. Request the actual data
+                        post_headers = {
+                            'x-csrf-token': csrf_token,
+                            'x-requested-with': 'XMLHttpRequest',
+                            'referer': scanner_url,
+                            'origin': 'https://chartink.com',
+                            'User-Agent': headers['User-Agent']
+                        }
+                        payload = {'scan_clause': scan_clause}
+                        
+                        api_res = s.post('https://chartink.com/screener/process', headers=post_headers, data=payload, timeout=10)
+                        
+                        if api_res.status_code == 200:
+                            try:
+                                json_data = api_res.json()
+                                stock_data = json_data.get('data', [])
+                                if not stock_data:
+                                    stock_data = [{"nsecode": "INFO", "name": "Scan successful, but zero stocks match the criteria right now.", "close": 0, "per_chg": 0, "volume": 0}]
+                            except Exception as json_e:
+                                stock_data = [{"nsecode": "ERROR", "name": f"Chartink returned invalid JSON: {str(json_e)}", "close": 0, "per_chg": 0, "volume": 0}]
+                        else:
+                            stock_data = [{"nsecode": "ERROR", "name": f"Chartink blocked POST. Status: {api_res.status_code}", "close": 0, "per_chg": 0, "volume": 0}]
+                            
         except Exception as e:
-            print(f"Failed to fetch Chartink data: {e}")
-
+            stock_data = [{"nsecode": "ERROR", "name": f"Server crash: {str(e)}", "close": 0, "per_chg": 0, "volume": 0}]
     # FIXED: Strict Keyword Syntax for Modern FastAPI
     return templates.TemplateResponse(
         request=request, 
