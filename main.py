@@ -913,24 +913,26 @@ def tool_pages(request: Request, tool_id: str):
         try:
             scanner_url = "https://chartink.com/screener/swing-trade-16062218"
             
-            # 1. Advanced Browser Disguise
-            scraper = cloudscraper.create_scraper(browser={'browser': 'chrome', 'platform': 'windows', 'desktop': True})
-            r = scraper.get(scanner_url, timeout=15)
+            # 1. The Modern Ghost Browser (Bypasses Cloudflare Turnstile)
+            from curl_cffi import requests as c_requests
+            from bs4 import BeautifulSoup
+            
+            # Impersonate a flawless Google Chrome 110 environment
+            r = c_requests.get(scanner_url, impersonate="chrome110", timeout=15)
             
             if r.status_code == 200:
-                # 2. Flawless HTML Parsing with BeautifulSoup
-                from bs4 import BeautifulSoup
                 soup = BeautifulSoup(r.text, 'html.parser')
                 
-                csrf_meta = soup.find('meta', {'name': 'csrf-token'})
-                clause_input = soup.find('input', {'id': 'scan_clause'})
+                # DIAGNOSTIC: Get the page title to see exactly what Cloudflare is doing
+                page_title = soup.title.string.strip() if soup.title else "No Title Found"
+                
+                csrf_meta = soup.find('meta', attrs={'name': 'csrf-token'})
+                clause_input = soup.find('input', attrs={'id': 'scan_clause'})
                 
                 if csrf_meta and clause_input:
                     csrf_token = csrf_meta.get('content')
-                    # BeautifulSoup automatically handles unescaping and preserves exact capitalization!
                     scan_clause = clause_input.get('value')
                     
-                    # 3. Request Data from Chartink Backend
                     post_headers = {
                         'x-csrf-token': csrf_token,
                         'x-requested-with': 'XMLHttpRequest',
@@ -938,21 +940,24 @@ def tool_pages(request: Request, tool_id: str):
                         'origin': 'https://chartink.com'
                     }
                     
-                    api_res = scraper.post('https://chartink.com/screener/process', headers=post_headers, data={'scan_clause': scan_clause}, timeout=15)
+                    # Send the POST request using the same Chrome 110 fingerprint
+                    api_res = c_requests.post('https://chartink.com/screener/process', headers=post_headers, data={'scan_clause': scan_clause}, impersonate="chrome110", timeout=15)
                     
                     if api_res.status_code == 200:
                         stock_data = api_res.json().get('data', [])
                         if not stock_data:
-                            stock_data = [{"nsecode": "INFO", "name": "Scan completed successfully, but 0 stocks match the criteria right now.", "close": 0, "per_chg": 0, "volume": 0}]
+                            stock_data = [{"nsecode": "INFO", "name": "Scan completed successfully! 0 stocks match the criteria right now.", "close": 0, "per_chg": 0, "volume": 0}]
                     else:
                         stock_data = [{"nsecode": "ERROR", "name": f"Chartink blocked POST. Status: {api_res.status_code}", "close": 0, "per_chg": 0, "volume": 0}]
                 else:
-                    stock_data = [{"nsecode": "ERROR", "name": "BeautifulSoup failed to find the hidden tokens in the HTML.", "close": 0, "per_chg": 0, "volume": 0}]
+                    # IF IT FAILS, PRINT THE PAGE TITLE TO THE UI SO WE CAN READ CLOUDFLARE'S MIND
+                    stock_data = [{"nsecode": "BLOCKED", "name": f"Cloudflare Intercepted. Page Title Seen: {page_title}", "close": 0, "per_chg": 0, "volume": 0}]
             else:
                 stock_data = [{"nsecode": "ERROR", "name": f"Chartink blocked GET. Status: {r.status_code}", "close": 0, "per_chg": 0, "volume": 0}]
                 
         except Exception as e:
             stock_data = [{"nsecode": "ERROR", "name": f"Server crash: {str(e)}", "close": 0, "per_chg": 0, "volume": 0}]
+            
     # FIXED: Strict Keyword Syntax for Modern FastAPI
     return templates.TemplateResponse(
         request=request, 
