@@ -881,6 +881,10 @@ def health_check():
 # MULTI-PAGE ROUTING (MEGA FOOTER LINKS)
 # ==========================================
 
+# ==========================================
+# MULTI-PAGE ROUTING & LIVE SCRAPER
+# ==========================================
+
 @app.get("/tools/{tool_id}", response_class=HTMLResponse)
 def tool_pages(request: Request, tool_id: str):
     tools = {
@@ -899,27 +903,19 @@ def tool_pages(request: Request, tool_id: str):
     
     stock_data = []
     
-    # ==========================================
-    # CHARTINK LIVE SCRAPER ENGINE
-    # ==========================================
     if tool_id == "swing":
         try:
             scanner_url = "https://chartink.com/screener/swing-trade-16062218"
             
             with requests.Session() as s:
-                # 1. Fetch the page to grab the CSRF security token and session cookies
                 r = s.get(scanner_url, headers={'User-Agent': 'Mozilla/5.0'})
-                
-                # 2. Extract Token and Scanner Logic using Regex
                 csrf_match = re.search(r'<meta name="csrf-token" content="(.*?)">', r.text)
                 clause_match = re.search(r'<input type="hidden" name="scan_clause" id="scan_clause" value="(.*?)"', r.text)
                 
                 if csrf_match and clause_match:
                     csrf_token = csrf_match.group(1)
-                    # HTML Unescape the logic (Chartink stores > as &gt;)
                     scan_clause = html.unescape(clause_match.group(1))
                     
-                    # 3. Post to the API processor to get live stock data
                     headers = {
                         'x-csrf-token': csrf_token,
                         'x-requested-with': 'XMLHttpRequest',
@@ -934,20 +930,18 @@ def tool_pages(request: Request, tool_id: str):
         except Exception as e:
             print(f"Failed to fetch Chartink data: {e}")
 
-    return templates.TemplateResponse(
-        request=request, 
-        name="page.html", 
-        context={
-            "title": title, 
-            "page_type": "tool",
-            "tool_id": tool_id,    # Passed to UI to trigger the table
-            "stocks": stock_data   # Passed to UI to populate rows
-        }
-    )
+    # UNIVERSAL TEMPLATE SYNTAX FIX
+    return templates.TemplateResponse("page.html", {
+        "request": request, 
+        "title": title, 
+        "page_type": "tool",
+        "tool_id": tool_id,    
+        "stocks": stock_data   
+    })
 
 
 @app.get("/legal/{page_id}", response_class=HTMLResponse)
-async def legal_pages(request: Request, page_id: str):
+def legal_pages(request: Request, page_id: str):
     docs = {
         "80c-guide": "Section 80C Investment Guide",
         "crypto-tax": "Crypto Tax Rules (Sec 115BBH)",
@@ -956,5 +950,10 @@ async def legal_pages(request: Request, page_id: str):
         "contact": "Contact Advisory Team"
     }
     title = docs.get(page_id, "TaxMojo Resource")
-    # Updated return syntax
-    return templates.TemplateResponse(request=request, name="page.html", context={"title": title, "page_type": "legal"})
+    
+    # UNIVERSAL TEMPLATE SYNTAX FIX
+    return templates.TemplateResponse("page.html", {
+        "request": request, 
+        "title": title, 
+        "page_type": "legal"
+    })
