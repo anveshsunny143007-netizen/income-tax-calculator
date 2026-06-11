@@ -4,5 +4,5 @@ jinja2
 python-multipart
 reportlab
 requests
-cloudscraper
+curl-cffi
 beautifulsoup4
