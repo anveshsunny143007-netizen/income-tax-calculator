@@ -35,7 +35,6 @@
 <div class="content-container">
     {% if page_type == 'tool' %}
         
-        <!-- IF THE USER CLICKS SWING TRADING, SHOW THE LIVE SCANNER -->
         {% if tool_id == 'swing' %}
             <div style="max-width: 900px; margin: 0 auto;">
                 <span class="badge" style="background: #e6f9f6; color: #008771; border-color: #008771;">LIVE MARKET DATA</span>
@@ -80,7 +79,6 @@
                 </div>
             </div>
 
-        <!-- FOR ALL OTHER TOOLS, SHOW THE BETA WAITLIST MESSAGE -->
         {% else %}
             <span class="badge">PRO FEATURE IN BETA</span>
             <h1>{{ title }}</h1>
@@ -89,6 +87,14 @@
         {% endif %}
         
         <a href="/" class="btn-primary" style="display: inline-block; margin-top: 30px;">← Return to Dashboard</a>
+
+    {% elif page_type == 'legal' %}
+        <span class="badge" style="color: var(--primary); border-color: var(--primary); background: #e8f0f1;">LEGAL & ADVISORY</span>
+        <h1>{{ title }}</h1>
+        <p style="text-align: left;">This documentation outlines the regulatory framework, usage policies, and structural guidelines for engaging with the TaxMojo calculation engine. We prioritize complete transparency and data security for all our users.</p>
+        <p style="text-align: left; margin-top: 30px; padding: 20px; background: var(--gray-light); border-radius: 8px;"><em>[Detailed legal documentation and institutional guidelines for {{ title }} will be populated here shortly.]</em></p>
+        <a href="/" class="btn-primary">← Return to Dashboard</a>
+    {% endif %}
 </div>
 
 </body>
