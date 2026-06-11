@@ -918,13 +918,17 @@ def tool_pages(request: Request, tool_id: str):
             r = scraper.get(scanner_url, timeout=15)
             
             if r.status_code == 200:
-                # 2. Flawless Regex Extraction (Grabs Chartink's EXACT case-sensitive formula)
-                csrf_match = re.search(r'<meta name="csrf-token" content="([^"]+)">', r.text)
-                clause_match = re.search(r'<input type="hidden" name="scan_clause" id="scan_clause" value="(.*?)"', r.text, re.DOTALL)
+                # 2. Flawless HTML Parsing with BeautifulSoup
+                from bs4 import BeautifulSoup
+                soup = BeautifulSoup(r.text, 'html.parser')
                 
-                if csrf_match and clause_match:
-                    csrf_token = csrf_match.group(1)
-                    scan_clause = html.unescape(clause_match.group(1)) # Converts formatting safely
+                csrf_meta = soup.find('meta', {'name': 'csrf-token'})
+                clause_input = soup.find('input', {'id': 'scan_clause'})
+                
+                if csrf_meta and clause_input:
+                    csrf_token = csrf_meta.get('content')
+                    # BeautifulSoup automatically handles unescaping and preserves exact capitalization!
+                    scan_clause = clause_input.get('value')
                     
                     # 3. Request Data from Chartink Backend
                     post_headers = {
@@ -943,7 +947,7 @@ def tool_pages(request: Request, tool_id: str):
                     else:
                         stock_data = [{"nsecode": "ERROR", "name": f"Chartink blocked POST. Status: {api_res.status_code}", "close": 0, "per_chg": 0, "volume": 0}]
                 else:
-                    stock_data = [{"nsecode": "ERROR", "name": "Regex failed to find tokens.", "close": 0, "per_chg": 0, "volume": 0}]
+                    stock_data = [{"nsecode": "ERROR", "name": "BeautifulSoup failed to find the hidden tokens in the HTML.", "close": 0, "per_chg": 0, "volume": 0}]
             else:
                 stock_data = [{"nsecode": "ERROR", "name": f"Chartink blocked GET. Status: {r.status_code}", "close": 0, "per_chg": 0, "volume": 0}]
                 
