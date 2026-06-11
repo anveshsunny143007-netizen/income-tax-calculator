@@ -913,25 +913,21 @@ def tool_pages(request: Request, tool_id: str):
         try:
             scanner_url = "https://chartink.com/screener/swing-trade-16062218"
             
-            # 1. The Modern Ghost Browser (Bypasses Cloudflare Turnstile)
+            # 1. Bypass Cloudflare to get the security token
             from curl_cffi import requests as c_requests
             from bs4 import BeautifulSoup
             
-            # Impersonate a flawless Google Chrome 110 environment
             r = c_requests.get(scanner_url, impersonate="chrome110", timeout=15)
             
             if r.status_code == 200:
                 soup = BeautifulSoup(r.text, 'html.parser')
-                
-                # DIAGNOSTIC: Get the page title to see exactly what Cloudflare is doing
-                page_title = soup.title.string.strip() if soup.title else "No Title Found"
-                
                 csrf_meta = soup.find('meta', attrs={'name': 'csrf-token'})
-                clause_input = soup.find('input', attrs={'id': 'scan_clause'})
                 
-                if csrf_meta and clause_input:
+                if csrf_meta:
                     csrf_token = csrf_meta.get('content')
-                    scan_clause = clause_input.get('value')
+                    
+                    # 2. THE SECRET: We must hardcode the exact backend formula here!
+                    scan_clause = "( {cash} ( latest close > latest pivot point r1 and latest close > latest supertrend( 10,3 ) and latest volume > 1.5 * latest sma( latest volume , 20 ) and latest close > latest ema( latest close , 20 ) and latest close > latest ema( latest close , 50 ) and weekly close > weekly ema( weekly close , 20 ) and latest close >= latest high * 0.98 and latest close > 100 and market cap > 200 ) )"
                     
                     post_headers = {
                         'x-csrf-token': csrf_token,
@@ -940,24 +936,22 @@ def tool_pages(request: Request, tool_id: str):
                         'origin': 'https://chartink.com'
                     }
                     
-                    # Send the POST request using the same Chrome 110 fingerprint
+                    # 3. Post directly to Chartink's data processor
                     api_res = c_requests.post('https://chartink.com/screener/process', headers=post_headers, data={'scan_clause': scan_clause}, impersonate="chrome110", timeout=15)
                     
                     if api_res.status_code == 200:
                         stock_data = api_res.json().get('data', [])
                         if not stock_data:
-                            stock_data = [{"nsecode": "INFO", "name": "Scan completed successfully! 0 stocks match the criteria right now.", "close": 0, "per_chg": 0, "volume": 0}]
+                            stock_data = [{"nsecode": "INFO", "name": "Scan successful! Zero stocks matched the criteria.", "close": 0, "per_chg": 0, "volume": 0}]
                     else:
                         stock_data = [{"nsecode": "ERROR", "name": f"Chartink blocked POST. Status: {api_res.status_code}", "close": 0, "per_chg": 0, "volume": 0}]
                 else:
-                    # IF IT FAILS, PRINT THE PAGE TITLE TO THE UI SO WE CAN READ CLOUDFLARE'S MIND
-                    stock_data = [{"nsecode": "BLOCKED", "name": f"Cloudflare Intercepted. Page Title Seen: {page_title}", "close": 0, "per_chg": 0, "volume": 0}]
+                    stock_data = [{"nsecode": "ERROR", "name": "Failed to find CSRF security token.", "close": 0, "per_chg": 0, "volume": 0}]
             else:
                 stock_data = [{"nsecode": "ERROR", "name": f"Chartink blocked GET. Status: {r.status_code}", "close": 0, "per_chg": 0, "volume": 0}]
                 
         except Exception as e:
-            stock_data = [{"nsecode": "ERROR", "name": f"Server crash: {str(e)}", "close": 0, "per_chg": 0, "volume": 0}]
-            
+            stock_data = [{"nsecode": "ERROR", "name": f"Server crash: {str(e)}", "close": 0, "per_chg": 0, "volume": 0}]            
     # FIXED: Strict Keyword Syntax for Modern FastAPI
     return templates.TemplateResponse(
         request=request, 
