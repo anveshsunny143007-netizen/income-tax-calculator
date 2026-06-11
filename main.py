@@ -912,24 +912,36 @@ def tool_pages(request: Request, tool_id: str):
             scanner_url = "https://chartink.com/screener/swing-trade-16062218"
             
             with requests.Session() as s:
-                r = s.get(scanner_url, headers={'User-Agent': 'Mozilla/5.0'})
-                csrf_match = re.search(r'<meta name="csrf-token" content="(.*?)">', r.text)
-                clause_match = re.search(r'<input type="hidden" name="scan_clause" id="scan_clause" value="(.*?)"', r.text)
+                # 1. Use a real browser User-Agent to bypass Cloudflare bot protection
+                headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'}
+                r = s.get(scanner_url, headers=headers, timeout=10)
+                
+                # 2. Extract Token and Scanner Logic 
+                # ADDED re.DOTALL: This forces Python to read the scanner even if it spans multiple lines!
+                csrf_match = re.search(r'name="csrf-token"\s+content="([^"]+)"', r.text, re.IGNORECASE)
+                clause_match = re.search(r'name="scan_clause".*?value="(.*?)"', r.text, re.IGNORECASE | re.DOTALL)
                 
                 if csrf_match and clause_match:
                     csrf_token = csrf_match.group(1)
                     scan_clause = html.unescape(clause_match.group(1))
                     
-                    headers = {
+                    # 3. Post to the API processor to get live stock data
+                    post_headers = {
                         'x-csrf-token': csrf_token,
                         'x-requested-with': 'XMLHttpRequest',
                         'referer': scanner_url,
-                        'User-Agent': 'Mozilla/5.0'
+                        'User-Agent': headers['User-Agent']
                     }
                     payload = {'scan_clause': scan_clause}
                     
-                    api_res = s.post('https://chartink.com/screener/process', headers=headers, data=payload)
-                    stock_data = api_res.json().get('data', [])
+                    api_res = s.post('https://chartink.com/screener/process', headers=post_headers, data=payload, timeout=10)
+                    
+                    if api_res.status_code == 200:
+                        stock_data = api_res.json().get('data', [])
+                    else:
+                        print(f"Chartink API Blocked Request. Status Code: {api_res.status_code}")
+                else:
+                    print("Could not find the hidden scanner formula on the page.")
                     
         except Exception as e:
             print(f"Failed to fetch Chartink data: {e}")
