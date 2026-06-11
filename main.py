@@ -16,6 +16,8 @@ import math
 import requests
 import re
 import html
+import cloudscraper
+from bs4 import BeautifulSoup
 
 app = FastAPI()
 
@@ -911,60 +913,54 @@ def tool_pages(request: Request, tool_id: str):
         try:
             scanner_url = "https://chartink.com/screener/swing-trade-16062218"
             
-            with requests.Session() as s:
-                # 1. Strongest possible browser disguise
-                headers = {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
-                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-                    'Accept-Language': 'en-US,en;q=0.9',
-                    'Sec-Ch-Ua': '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
-                    'Sec-Ch-Ua-Mobile': '?0',
-                    'Sec-Ch-Ua-Platform': '"Windows"',
-                }
+            # 1. The Ultimate Cloudflare Bypass
+            scraper = cloudscraper.create_scraper()
+            
+            r = scraper.get(scanner_url, timeout=15)
+            
+            if r.status_code != 200:
+                stock_data = [{"nsecode": "ERROR", "name": f"Chartink blocked GET. Status: {r.status_code}", "close": 0, "per_chg": 0, "volume": 0}]
+            else:
+                # 2. Use BeautifulSoup for absolute precision
+                soup = BeautifulSoup(r.text, 'html.parser')
+                csrf_meta = soup.select_one('meta[name="csrf-token"]')
+                clause_input = soup.select_one('input#scan_clause')
                 
-                r = s.get(scanner_url, headers=headers, timeout=10)
+                csrf_token = ""
+                scan_clause = ""
                 
-                if r.status_code != 200:
-                    stock_data = [{"nsecode": "ERROR", "name": f"Chartink blocked GET. Status: {r.status_code}", "close": 0, "per_chg": 0, "volume": 0}]
-                else:
-                    # 2. Bulletproof Regex to find the hidden tokens regardless of HTML order
-                    csrf_match = re.search(r'<meta[^>]*name="csrf-token"[^>]*content="([^"]+)"', r.text, re.IGNORECASE)
-                    clause_tag = re.search(r'<input[^>]*id="scan_clause"[^>]*>', r.text, re.IGNORECASE)
+                if csrf_meta and clause_input:
+                    csrf_token = csrf_meta.get('content')
+                    scan_clause = clause_input.get('value')
+                elif csrf_meta:
+                    # 3. THE FAILSAFE: If Cloudflare hides the input box, we use your exact screenshot logic!
+                    csrf_token = csrf_meta.get('content')
+                    scan_clause = "( {cash} ( latest close > latest pivot point r1 and latest close > latest supertrend( 10,3 ) and latest volume > 1.5 * latest sma( latest volume , 20 ) and latest close > latest ema( latest close , 20 ) and latest close > latest ema( latest close , 50 ) and weekly close > weekly ema( weekly close , 20 ) and latest close >= latest high * 0.98 and latest close > 100 and market cap > 200 ) )"
+                
+                if csrf_token and scan_clause:
+                    # 4. Post to the API
+                    post_headers = {
+                        'x-csrf-token': csrf_token,
+                        'x-requested-with': 'XMLHttpRequest',
+                        'referer': scanner_url
+                    }
+                    payload = {'scan_clause': scan_clause}
                     
-                    csrf_token = csrf_match.group(1) if csrf_match else ""
-                    scan_clause = ""
+                    api_res = scraper.post('https://chartink.com/screener/process', headers=post_headers, data=payload, timeout=15)
                     
-                    if clause_tag:
-                        val_match = re.search(r'value="([^"]+)"', clause_tag.group(0), re.IGNORECASE)
-                        if val_match:
-                            scan_clause = html.unescape(val_match.group(1))
-                            
-                    if not csrf_token or not scan_clause:
-                        stock_data = [{"nsecode": "ERROR", "name": "Regex failed. Could not parse Chartink HTML.", "close": 0, "per_chg": 0, "volume": 0}]
+                    if api_res.status_code == 200:
+                        try:
+                            json_data = api_res.json()
+                            stock_data = json_data.get('data', [])
+                            if not stock_data:
+                                stock_data = [{"nsecode": "INFO", "name": "Scan successful! Zero stocks passed the strict filters right now.", "close": 0, "per_chg": 0, "volume": 0}]
+                        except Exception as json_e:
+                            stock_data = [{"nsecode": "ERROR", "name": f"Invalid JSON: {str(json_e)}", "close": 0, "per_chg": 0, "volume": 0}]
                     else:
-                        # 3. Request the actual data
-                        post_headers = {
-                            'x-csrf-token': csrf_token,
-                            'x-requested-with': 'XMLHttpRequest',
-                            'referer': scanner_url,
-                            'origin': 'https://chartink.com',
-                            'User-Agent': headers['User-Agent']
-                        }
-                        payload = {'scan_clause': scan_clause}
-                        
-                        api_res = s.post('https://chartink.com/screener/process', headers=post_headers, data=payload, timeout=10)
-                        
-                        if api_res.status_code == 200:
-                            try:
-                                json_data = api_res.json()
-                                stock_data = json_data.get('data', [])
-                                if not stock_data:
-                                    stock_data = [{"nsecode": "INFO", "name": "Scan successful, but zero stocks match the criteria right now.", "close": 0, "per_chg": 0, "volume": 0}]
-                            except Exception as json_e:
-                                stock_data = [{"nsecode": "ERROR", "name": f"Chartink returned invalid JSON: {str(json_e)}", "close": 0, "per_chg": 0, "volume": 0}]
-                        else:
-                            stock_data = [{"nsecode": "ERROR", "name": f"Chartink blocked POST. Status: {api_res.status_code}", "close": 0, "per_chg": 0, "volume": 0}]
-                            
+                        stock_data = [{"nsecode": "ERROR", "name": f"Chartink blocked POST. Status: {api_res.status_code}", "close": 0, "per_chg": 0, "volume": 0}]
+                else:
+                    stock_data = [{"nsecode": "ERROR", "name": "Cloudflare blocked content entirely.", "close": 0, "per_chg": 0, "volume": 0}]
+                    
         except Exception as e:
             stock_data = [{"nsecode": "ERROR", "name": f"Server crash: {str(e)}", "close": 0, "per_chg": 0, "volume": 0}]
     # FIXED: Strict Keyword Syntax for Modern FastAPI
