@@ -885,6 +885,10 @@ def health_check():
 # MULTI-PAGE ROUTING & LIVE SCRAPER
 # ==========================================
 
+# ==========================================
+# MULTI-PAGE ROUTING & LIVE SCRAPER
+# ==========================================
+
 @app.get("/tools/{tool_id}", response_class=HTMLResponse)
 def tool_pages(request: Request, tool_id: str):
     tools = {
@@ -930,15 +934,17 @@ def tool_pages(request: Request, tool_id: str):
         except Exception as e:
             print(f"Failed to fetch Chartink data: {e}")
 
-    # UNIVERSAL TEMPLATE SYNTAX FIX
-    return templates.TemplateResponse("page.html", {
-        "request": request, 
-        "title": title, 
-        "page_type": "tool",
-        "tool_id": tool_id,    
-        "stocks": stock_data   
-    })
-
+    # FIXED: Strict Keyword Syntax for Modern FastAPI
+    return templates.TemplateResponse(
+        request=request, 
+        name="page.html", 
+        context={
+            "title": title, 
+            "page_type": "tool",
+            "tool_id": tool_id,    
+            "stocks": stock_data   
+        }
+    )
 
 @app.get("/legal/{page_id}", response_class=HTMLResponse)
 def legal_pages(request: Request, page_id: str):
@@ -951,9 +957,12 @@ def legal_pages(request: Request, page_id: str):
     }
     title = docs.get(page_id, "TaxMojo Resource")
     
-    # UNIVERSAL TEMPLATE SYNTAX FIX
-    return templates.TemplateResponse("page.html", {
-        "request": request, 
-        "title": title, 
-        "page_type": "legal"
-    })
+    # FIXED: Strict Keyword Syntax for Modern FastAPI
+    return templates.TemplateResponse(
+        request=request, 
+        name="page.html", 
+        context={
+            "title": title, 
+            "page_type": "legal"
+        }
+    )
