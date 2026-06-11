@@ -16,7 +16,7 @@ import math
 import requests
 import re
 import html
-import cloudscraper
+from curl_cffi import requests as c_requests
 from bs4 import BeautifulSoup
 
 app = FastAPI()
