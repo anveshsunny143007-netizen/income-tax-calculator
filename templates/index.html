@@ -120,6 +120,7 @@
         }
 
         /* Flexbox Header - Forces Title Left and X Right */
+        /* Restored Standard Header with a Safe Zone */
         .modal-header { 
             font-size: 20px; 
             font-weight: bold; 
@@ -127,13 +128,15 @@
             margin-bottom: 15px; 
             border-bottom: 1px solid #eee; 
             padding-bottom: 15px; 
-            display: flex; 
-            justify-content: space-between; /* Pushes items to opposite sides */
-            align-items: center; /* Centers them vertically */
+            padding-right: 40px; /* The invisible wall so text never hits the X */
+            display: block; /* Removes the buggy flexbox */
         }
         
-        /* The Perfect Close Button */
+        /* Anchored absolutely to the white box */
         .close-btn { 
+            position: absolute !important; 
+            top: 20px !important; 
+            right: 20px !important; 
             font-size: 32px !important; 
             cursor: pointer; 
             color: #a0aec0 !important; 
@@ -142,9 +145,7 @@
             padding: 0 !important;
             transition: color 0.2s ease, transform 0.2s ease;
             line-height: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            z-index: 10; /* Ensures it stays above everything */
         }
 
         /* The Hover Effect */
@@ -524,9 +525,10 @@
 <div class="modal-overlay" id="hraModal">
     <div class="modal-content">
         
+        <button class="close-btn" type="button" onclick="closeHraModal()">&times;</button>
+        
         <div class="modal-header">
-            <span>🏠 Smart HRA Calculator</span>
-            <button class="close-btn" type="button" onclick="closeHraModal()">&times;</button>
+            🏠 Smart HRA Calculator
         </div>
         
         <p style="font-size: 13px; color: #555; margin-top: 0;">Calculate your legal House Rent Allowance exemption based on Section 10(13A).</p>
