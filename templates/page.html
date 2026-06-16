@@ -34,62 +34,13 @@
 
 <div class="content-container">
     {% if page_type == 'tool' %}
-        
-        {% if tool_id == 'swing' %}
-            <div style="max-width: 900px; margin: 0 auto;">
-                <span class="badge" style="background: #e6f9f6; color: #008771; border-color: #008771;">LIVE MARKET DATA</span>
-                <h1>{{ title }}</h1>
-                <p>This scanner actively filters the cash segment for stocks crossing Pivot Point R1 with high volume, riding above the 20 & 50 EMAs, and securing the Supertrend support.</p>
-                
-                <div style="overflow-x: auto; margin-top: 30px; border-radius: 8px; border: 1px solid #eef2f5;">
-                    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
-                        <thead>
-                            <tr style="background: var(--primary); color: white;">
-                                <th style="padding: 14px;">Symbol</th>
-                                <th style="padding: 14px;">Stock Name</th>
-                                <th style="padding: 14px;">Close Price</th>
-                                <th style="padding: 14px;">% Change</th>
-                                <th style="padding: 14px;">Volume</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% if stocks %}
-                                {% for stock in stocks %}
-                                <tr style="border-bottom: 1px solid #eef2f5; transition: 0.2s;" onmouseover="this.style.backgroundColor='#f8f9fa'" onmouseout="this.style.backgroundColor='transparent'">
-                                    <td style="padding: 14px; font-weight: bold; color: var(--primary);">{{ stock.nsecode }}</td>
-                                    <td style="padding: 14px; color: #4a5568;">{{ stock.name }}</td>
-                                    <td style="padding: 14px; font-weight: bold;">₹{{ stock.close }}</td>
-                                    <td style="padding: 14px; color: {% if stock.per_chg > 0 %}#008771{% else %}#c3273e{% endif %}; font-weight: bold;">{{ stock.per_chg }}%</td>
-                                    <td style="padding: 14px; color: #697386;">{{ "{:,.0f}".format(stock.volume) }}</td>
-                                </tr>
-                                {% endfor %}
-                            {% else %}
-                                <tr>
-                                    <td colspan="5" style="padding: 30px; text-align: center; color: #c3273e; font-weight: 500;">
-                                        Scanning the market... No stocks currently meet the strict breakout criteria.
-                                    </td>
-                                </tr>
-                            {% endif %}
-                        </tbody>
-                    </table>
-                </div>
-            <!--
-                <div style="margin-top: 20px; text-align: right;">
-                    <a href="https://chartink.com/screener/swing-trade-16062218" target="_blank" style="color: var(--accent); text-decoration: none; font-size: 13px; font-weight: bold;">Verify on Chartink ↗</a>
-                </div>
-            -->
-                
-            </div>
-
-        {% else %}
-            <span class="badge">PRO FEATURE IN BETA</span>
-            <h1>{{ title }}</h1>
-            <p>This institutional-grade market tool is currently undergoing rigorous beta testing with our closed network of Chartered Accountants and proprietary traders.</p>
-            <p>To ensure absolute data accuracy and seamless execution, public access has been temporarily restricted. The full suite will be unlocked in our upcoming v2.0 release.</p>
-        {% endif %}
-        
+        <span class="badge">PRO FEATURE IN BETA</span>
+        <h1>{{ title }}</h1>
+        <p>This institutional-grade market tool is currently undergoing rigorous beta testing with our closed network of Chartered Accountants and proprietary traders.</p>
+        <p>To ensure absolute data accuracy and seamless execution, public access has been temporarily restricted. The full suite will be unlocked in our upcoming v2.0 release.</p>
         <a href="/" class="btn-primary" style="display: inline-block; margin-top: 30px;">← Return to Dashboard</a>
 
+    <!-- LEGAL PAGES LOGIC -->
     {% elif page_type == 'legal' %}
         <span class="badge" style="color: var(--primary); border-color: var(--primary); background: #e8f0f1;">LEGAL & ADVISORY</span>
         <h1>{{ title }}</h1>
