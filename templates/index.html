@@ -89,10 +89,61 @@
         .faq-section p { font-size: 14px; color: #4a5568; margin-top: 0; }
 
         /* Modal Styles */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
-        .modal-content { background: white; padding: 30px; border-radius: 12px; width: 90%; max-width: 500px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); position: relative; }
+        /* 1. The Background Overlay (Fixed for scrolling) */
+        .modal-overlay { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(10, 37, 64, 0.6); /* Deep, professional transparency */
+            z-index: 1000; 
+            align-items: center; 
+            justify-content: center; 
+            backdrop-filter: blur(4px); /* Modern frosted glass blur */
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* 2. The White Calculator Box (Fixed for small screens) */
+        .modal-content { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 16px; 
+            width: 100%; 
+            max-width: 500px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
+            position: relative; 
+            max-height: 90vh; /* CRITICAL: Prevents it from growing taller than the screen */
+            overflow-y: auto; /* CRITICAL: Adds a scrollbar inside the modal if needed */
+        }
+
         .modal-header { font-size: 20px; font-weight: bold; color: #184c54; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-        .close-btn { position: absolute; top: 20px; right: 20px; font-size: 24px; cursor: pointer; color: #999; border: none; background: none; }
+        
+        /* 3. The Perfect Close Button (Forces transparency) */
+        .close-btn { 
+            position: absolute !important; 
+            top: 20px !important; 
+            right: 20px !important; 
+            font-size: 28px !important; 
+            cursor: pointer; 
+            color: #a0aec0 !important; 
+            border: none !important; 
+            background: transparent !important; /* CRITICAL: Blocks global button backgrounds */
+            padding: 0 !important;
+            transition: color 0.2s ease, transform 0.2s ease;
+            line-height: 1;
+        }
+
+        /* 4. The Hover Effect */
+        .close-btn:hover {
+            color: #c3273e !important; /* Turns red on hover */
+            background: transparent !important; /* Prevents the dark teal box */
+            transform: scale(1.15); /* Slightly enlarges the X */
+        }
+
+        /* Your existing results styling (kept exactly the same) */
         .modal-results { background: #fdfaf2; border: 1px solid #c79b63; padding: 15px; border-radius: 8px; margin-top: 20px; }
         .modal-results p { margin: 5px 0; font-size: 14px; display: flex; justify-content: space-between; }
         .modal-results .highlight { font-weight: bold; font-size: 16px; color: #184c54; border-top: 1px solid #c79b63; padding-top: 10px; margin-top: 10px; }
