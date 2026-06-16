@@ -119,23 +119,22 @@
             overflow-y: auto; /* CRITICAL: Adds a scrollbar inside the modal if needed */
         }
 
+        /* Flexbox Header - Forces Title Left and X Right */
         .modal-header { 
             font-size: 20px; 
             font-weight: bold; 
             color: #184c54; 
             margin-bottom: 15px; 
             border-bottom: 1px solid #eee; 
-            padding-bottom: 10px; 
-            padding-right: 40px; /* CRITICAL: Creates an empty safe zone for the X */
-            line-height: 1.4;
+            padding-bottom: 15px; 
+            display: flex; 
+            justify-content: space-between; /* Pushes items to opposite sides */
+            align-items: center; /* Centers them vertically */
         }
         
-        /* 3. The Perfect Close Button */
+        /* The Perfect Close Button */
         .close-btn { 
-            position: absolute !important; 
-            top: 25px !important;  /* Nudged down to align with title */
-            right: 25px !important; /* Pushed cleanly into the corner */
-            font-size: 28px !important; 
+            font-size: 32px !important; 
             cursor: pointer; 
             color: #a0aec0 !important; 
             border: none !important; 
@@ -143,13 +142,16 @@
             padding: 0 !important;
             transition: color 0.2s ease, transform 0.2s ease;
             line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* 4. The Hover Effect */
+        /* The Hover Effect */
         .close-btn:hover {
-            color: #c3273e !important; /* Turns red on hover */
-            background: transparent !important; /* Prevents the dark teal box */
-            transform: scale(1.15); /* Slightly enlarges the X */
+            color: #c3273e !important; 
+            background: transparent !important; 
+            transform: scale(1.15); 
         }
 
         /* Your existing results styling (kept exactly the same) */
@@ -521,8 +523,11 @@
 
 <div class="modal-overlay" id="hraModal">
     <div class="modal-content">
-        <button class="close-btn" type="button" onclick="closeHraModal()">&times;</button>
-        <div class="modal-header">🏠 Smart HRA Calculator</div>
+        
+        <div class="modal-header">
+            <span>🏠 Smart HRA Calculator</span>
+            <button class="close-btn" type="button" onclick="closeHraModal()">&times;</button>
+        </div>
         
         <p style="font-size: 13px; color: #555; margin-top: 0;">Calculate your legal House Rent Allowance exemption based on Section 10(13A).</p>
 
